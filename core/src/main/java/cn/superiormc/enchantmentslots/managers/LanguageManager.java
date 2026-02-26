@@ -91,7 +91,6 @@ public class LanguageManager {
         YamlConfiguration config = languageFiles.getOrDefault(lang, languageFiles.getOrDefault(serverLanguage.toLowerCase(), tempMessageFile));
         String text = config.getString(key);
 
-
         if (text == null) {
             if (tempMessageFile.getString(key) != null) {
                 text = tempMessageFile.getString(key);

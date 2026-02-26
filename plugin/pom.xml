@@ -8,7 +8,7 @@
     <parent>
         <groupId>cn.superiormc.enchantmentslots</groupId>
         <artifactId>EnchantmentSlots</artifactId>
-        <version>4.8.4</version>
+        <version>4.8.5</version>
         <relativePath>../pom.xml</relativePath> <!-- 如果 plugin 和根目录同级 -->
     </parent>
 
@@ -17,7 +17,7 @@
     </build>
 
     <artifactId>plugin</artifactId>
-    <version>4.8.4</version>
+    <version>4.8.5</version>
     <packaging>jar</packaging>
     <name>EnchantmentSlots</name>
 

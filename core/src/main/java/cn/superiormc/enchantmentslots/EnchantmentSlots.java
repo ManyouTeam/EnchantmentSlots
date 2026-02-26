@@ -35,7 +35,7 @@ public final class EnchantmentSlots extends JavaPlugin {
         } catch (Throwable throwable) {
             ErrorManager.errorManager.sendErrorMessage("§cError: Can not get your Minecraft version! Default set to 1.0.0.");
         }
-        if (CommonUtil.getClass("com.destroystokyo.paper.PaperConfig") && CommonUtil.getMinorVersion(17, 1)) {
+        if (CommonUtil.getClass("com.destroystokyo.paper.PaperConfig") && CommonUtil.getMinorVersion(18, 2)) {
             try {
                 Class<?> paperClass = Class.forName("cn.superiormc.enchantmentslots.paper.PaperMethodUtil");
                 methodUtil = (SpecialMethodUtil) paperClass.getDeclaredConstructor().newInstance();

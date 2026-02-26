@@ -6,7 +6,7 @@
     <parent>
         <groupId>cn.superiormc.enchantmentslots</groupId>
         <artifactId>EnchantmentSlots</artifactId>
-        <version>4.8.4</version>
+        <version>4.8.5</version>
     </parent>
 
     <artifactId>paper</artifactId>
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>cn.superiormc.enchantmentslots</groupId>
             <artifactId>core</artifactId>
-            <version>4.8.4</version>
+            <version>4.8.5</version>
             <optional>true</optional>
         </dependency>
     </dependencies>
