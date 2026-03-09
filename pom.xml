@@ -6,7 +6,7 @@
 
     <groupId>cn.superiormc.enchantmentslots</groupId>
     <artifactId>EnchantmentSlots</artifactId>
-    <version>4.8.5</version>
+    <version>4.8.6</version>
     <packaging>pom</packaging>
 
     <modules>
