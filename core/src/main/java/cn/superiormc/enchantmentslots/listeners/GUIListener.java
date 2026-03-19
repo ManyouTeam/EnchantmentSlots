@@ -1,6 +1,7 @@
 package cn.superiormc.enchantmentslots.listeners;
 
 import cn.superiormc.enchantmentslots.gui.InvGUI;
+import cn.superiormc.enchantmentslots.managers.ConfigManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -28,7 +29,7 @@ public class GUIListener implements Listener {
         try {
             if (e.getWhoClicked().equals(player)) {
                 if (!Objects.equals(e.getClickedInventory(), gui.getInv())) {
-                    if (e.getClick().isShiftClick()) {
+                    if (e.getClick().isShiftClick() || e.getClick() == ClickType.DOUBLE_CLICK || ConfigManager.configManager.getBoolean("enchant-gui.ignore-click-outside", true)) {
                         e.setCancelled(true);
                     }
                     return;

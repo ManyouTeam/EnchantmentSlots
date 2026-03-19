@@ -46,7 +46,7 @@ public class EnchantGUI extends InvGUI {
     @Override
     public boolean clickEventHandle(Inventory inventory, ItemStack item, int slot) {
         if (slot == ConfigManager.configManager.getInt("enchant-gui.item-slot", 11)) {
-            ItemStack requireItem = inv.getItem(ConfigManager.configManager.getInt("enchant-gui.gui.item-slot", 11));
+            ItemStack requireItem = inv.getItem(ConfigManager.configManager.getInt("enchant-gui.item-slot", 11));
             if (requireItem != null && !requireItem.getType().isAir()) {
                 return false;
             }

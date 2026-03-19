@@ -10,7 +10,7 @@ import cn.superiormc.enchantmentslots.methods.SlotUtil;
 import cn.superiormc.enchantmentslots.utils.CommonUtil;
 import cn.superiormc.enchantmentslots.utils.ItemUtil;
 import cn.superiormc.enchantmentslots.utils.RandomUtil;
-import net.Indyuce.mmoitems.MMOItems;
+import cn.superiormc.enchantmentslots.utils.SchedulerUtil;
 import org.bukkit.GameMode;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -30,7 +30,7 @@ import static cn.superiormc.enchantmentslots.methods.DeenchanterUtil.ENCHANTMENT
 public class PlayerInventoryListener implements Listener {
 
     @EventHandler (priority = EventPriority.LOWEST)
-    public void onInventoryDrag(InventoryClickEvent event) {
+    public void onExtraItemUse(InventoryClickEvent event) {
         if (!(event.getClickedInventory() instanceof PlayerInventory)) {
             return;
         }
@@ -64,6 +64,7 @@ public class PlayerInventoryListener implements Listener {
             LanguageManager.languageManager.sendStringText(player, "error-creative-mode");
             return;
         }
+        event.setCancelled(true);
         int maxValue = ConfigManager.configManager.getMaxLimits(targetItem, player);
         if (baseValue >= maxValue) {
             LanguageManager.languageManager.sendStringText(player, "max-slots-reached");
@@ -93,7 +94,7 @@ public class PlayerInventoryListener implements Listener {
     }
 
     @EventHandler
-    public void onItemClick(InventoryClickEvent event) {
+    public void onDeenchantItemUse(InventoryClickEvent event) {
         if (!(event.getClickedInventory() instanceof PlayerInventory)) {
             return;
         }
@@ -122,6 +123,7 @@ public class PlayerInventoryListener implements Listener {
             LanguageManager.languageManager.sendStringText(player, "error-creative-mode");
             return;
         }
+        event.setCancelled(true);
         if (extraItem.getAmount() != 1) {
             LanguageManager.languageManager.sendStringText(player, "error-item-only-one");
             return;
@@ -153,7 +155,7 @@ public class PlayerInventoryListener implements Listener {
         } else {
             if (MatchItemManager.matchItemManager.getMatch(ConfigManager.configManager.getSection("common-deenchanter.match-item"), targetItem)) {
                 DeenchantGUI gui = new DeenchantGUI(player, targetItem, extraItem);
-                gui.openGUI();
+                SchedulerUtil.runTaskLater(gui::openGUI, 1L);
             } else {
                 LanguageManager.languageManager.sendStringText(player, "error-not-match");
             }

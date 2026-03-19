@@ -186,6 +186,7 @@ enchant-used-slot:
 # Enchant UI
 enchant-gui:
   enabled: true
+  ignore-click-outside: false
   title: '{lang}'
   size: 27
   item-slot: 11

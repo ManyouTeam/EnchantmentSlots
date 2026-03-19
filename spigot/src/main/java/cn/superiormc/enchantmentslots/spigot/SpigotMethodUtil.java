@@ -159,7 +159,7 @@ public class SpigotMethodUtil implements SpecialMethodUtil {
         }
 
         BossBar bar = Bukkit.createBossBar(
-                title,
+                TextUtil.parse(title, player),
                 color == null ? BarColor.WHITE : BarColor.valueOf(color.toUpperCase()),
                 style == null ? BarStyle.SOLID : BarStyle.valueOf(style.toUpperCase())
         );

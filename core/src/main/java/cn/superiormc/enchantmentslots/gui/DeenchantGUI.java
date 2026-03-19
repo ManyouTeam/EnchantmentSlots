@@ -4,9 +4,11 @@ import cn.superiormc.enchantmentslots.EnchantmentSlots;
 import cn.superiormc.enchantmentslots.managers.ConfigManager;
 import cn.superiormc.enchantmentslots.managers.HookManager;
 import cn.superiormc.enchantmentslots.managers.LanguageManager;
+import cn.superiormc.enchantmentslots.utils.CommonUtil;
 import cn.superiormc.enchantmentslots.utils.ItemUtil;
 import cn.superiormc.enchantmentslots.utils.TextUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -50,7 +52,7 @@ public class DeenchantGUI extends InvGUI {
             if (lore == null) {
                 lore = new ArrayList<>();
             }
-            lore.addAll(ConfigManager.configManager.getStringList("deenchant-gui.ench-item"));
+            lore.addAll(ConfigManager.configManager.getStringList(player, "deenchant-gui.ench-item"));
             EnchantmentSlots.methodUtil.setItemLore(itemMeta, lore, player);
             tempItem.setItemMeta(itemMeta);
             inv.setItem(i, tempItem);
