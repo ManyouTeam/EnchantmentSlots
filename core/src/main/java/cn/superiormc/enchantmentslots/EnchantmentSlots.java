@@ -22,8 +22,6 @@ public final class EnchantmentSlots extends JavaPlugin {
 
     public static boolean isFolia = false;
 
-    public static boolean newSkullMethod;
-
     @Override
     public void onEnable() {
         instance = this;
@@ -70,10 +68,6 @@ public final class EnchantmentSlots extends JavaPlugin {
         new CommandManager();
         new MatchItemManager();
         new LanguageManager();
-        if (!CommonUtil.checkClass("com.mojang.authlib.properties.Property", "getValue") && CommonUtil.getMinorVersion(21, 1)) {
-            newSkullMethod = true;
-            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fNew AuthLib found, enabled new skull get method!");
-        }
         new LicenseManager();
         TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fYour server version is: " + yearVersion + "." + majorVersion + "." + minorVersion + "!");
         TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fPlugin is loaded. Author: PQguanfang.");
