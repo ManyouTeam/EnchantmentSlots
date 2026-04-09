@@ -19,7 +19,7 @@
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <revision>4.9.2</revision>
+        <revision>4.9.3</revision>
         <name>EnchantmentSlots</name>
     </properties>
 
@@ -156,6 +156,10 @@
         <repository>
             <id>momirealms repo</id>
             <url>https://repo.momirealms.net/releases/</url>
+        </repository>
+        <repository>
+            <id>nightexpress-releases</id>
+            <url>https://repo.nightexpressdev.com/releases</url>
         </repository>
     </repositories>
 </project>
