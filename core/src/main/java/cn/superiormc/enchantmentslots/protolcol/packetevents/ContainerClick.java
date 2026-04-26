@@ -1,4 +1,4 @@
-package cn.superiormc.enchantmentslots.protolcol.ProtocolLib;
+package cn.superiormc.enchantmentslots.protolcol.packetevents;
 
 import cn.superiormc.enchantmentslots.listeners.PlayerCacheListener;
 import com.github.retrooper.packetevents.event.PacketListener;

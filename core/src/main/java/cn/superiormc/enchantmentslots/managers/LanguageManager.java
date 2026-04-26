@@ -29,7 +29,7 @@ public class LanguageManager {
         initLanguages();
     }
 
-    protected String getPlayerLanguage(Player player) {
+    public String getPlayerLanguage(Player player) {
         if (player == null) {
             return serverLanguage.toLowerCase();
         }

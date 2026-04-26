@@ -1,4 +1,4 @@
-package cn.superiormc.enchantmentslots.protolcol.ProtocolLib;
+package cn.superiormc.enchantmentslots.protolcol.packetevents;
 
 import cn.superiormc.enchantmentslots.methods.AddLore;
 import cn.superiormc.enchantmentslots.utils.ItemUtil;
