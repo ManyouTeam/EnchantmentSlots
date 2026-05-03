@@ -4,6 +4,7 @@ import cn.superiormc.enchantmentslots.EnchantmentSlots;
 import cn.superiormc.enchantmentslots.managers.ConfigManager;
 import cn.superiormc.enchantmentslots.managers.HookManager;
 import cn.superiormc.enchantmentslots.managers.LanguageManager;
+import cn.superiormc.enchantmentslots.methods.Dupe;
 import cn.superiormc.enchantmentslots.utils.CommonUtil;
 import cn.superiormc.enchantmentslots.utils.ItemUtil;
 import cn.superiormc.enchantmentslots.utils.TextUtil;
@@ -55,7 +56,7 @@ public class DeenchantGUI extends InvGUI {
             lore.addAll(ConfigManager.configManager.getStringList(player, "deenchant-gui.ench-item"));
             EnchantmentSlots.methodUtil.setItemLore(itemMeta, lore, player);
             tempItem.setItemMeta(itemMeta);
-            inv.setItem(i, tempItem);
+            setItem(i, tempItem);
             enchCache.put(i, ench);
             i ++;
             if (i >= ConfigManager.configManager.getInt("deenchant-gui.size", 54)) {

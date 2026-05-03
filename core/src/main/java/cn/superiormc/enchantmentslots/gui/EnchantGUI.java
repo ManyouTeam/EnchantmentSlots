@@ -33,12 +33,12 @@ public class EnchantGUI extends InvGUI {
                     ConfigManager.configManager.getInt("enchant-gui.size", 27),
                     ConfigManager.configManager.getString(player, "enchant-gui.title", "Enchant UI"));
         }
-        inv.setItem(ConfigManager.configManager.getInt("enchant-gui.confirm-slot", 22), ItemUtil.buildItemStack(player,
+        setItem(ConfigManager.configManager.getInt("enchant-gui.confirm-slot", 22), ItemUtil.buildItemStack(player,
                 ConfigManager.configManager.config.getConfigurationSection("enchant-gui.confirm-item")));
         ConfigurationSection customItemSection = ConfigManager.configManager.config.getConfigurationSection("enchant-gui.custom-item");
         if (customItemSection != null) {
             for (String key : customItemSection.getKeys(false)){
-                inv.setItem(Integer.parseInt(key), ItemUtil.buildItemStack(player, customItemSection.getConfigurationSection(key)));
+                setItem(Integer.parseInt(key), ItemUtil.buildItemStack(player, customItemSection.getConfigurationSection(key)));
             }
         }
     }

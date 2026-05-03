@@ -2,6 +2,7 @@ package cn.superiormc.enchantmentslots.gui;
 
 import cn.superiormc.enchantmentslots.EnchantmentSlots;
 import cn.superiormc.enchantmentslots.listeners.GUIListener;
+import cn.superiormc.enchantmentslots.methods.Dupe;
 import cn.superiormc.enchantmentslots.utils.SchedulerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -40,6 +41,10 @@ public abstract class InvGUI extends AbstractGUI {
                 player.openInventory(inv);
             });
         }
+    }
+
+    public void setItem(int slot, ItemStack item) {
+        inv.setItem(slot, Dupe.markGuiDisplayItem(item));
     }
 
     public Inventory getInv() {
