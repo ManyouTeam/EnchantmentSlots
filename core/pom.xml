@@ -224,5 +224,11 @@
             <version>2.10.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>cn.gtemc</groupId>
+            <artifactId>itembridge</artifactId>
+            <version>1.0.25</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 </project>

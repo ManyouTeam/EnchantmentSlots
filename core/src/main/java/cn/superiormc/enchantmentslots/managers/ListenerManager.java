@@ -42,6 +42,10 @@ public class ListenerManager {
             TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fHooking into QuickShop-Hikari...");
             Bukkit.getPluginManager().registerEvents(new QuickShopListener(), EnchantmentSlots.instance);
         }
+        if (CommonUtil.getMajorVersion(19) && EnchantmentSlots.methodUtil.methodID().equals("paper") &&
+                ConfigManager.configManager.getBoolean("enchant-gui.anti-dupe-checker", false)) {
+            Bukkit.getPluginManager().registerEvents(new DupeListener(), EnchantmentSlots.instance);
+        }
     }
 
     private void registerPacketListeners() {

@@ -1,5 +1,8 @@
 package cn.superiormc.enchantmentslots.managers;
 
+import cn.gtemc.itembridge.api.ItemBridge;
+import cn.gtemc.itembridge.api.util.Pair;
+import cn.gtemc.itembridge.core.BukkitItemBridge;
 import cn.superiormc.enchantmentslots.EnchantmentSlots;
 import cn.superiormc.enchantmentslots.hooks.enchants.*;
 import cn.superiormc.enchantmentslots.hooks.items.*;
@@ -32,10 +35,19 @@ public class HookManager {
 
     private final Map<String, Map<Enchantment, String>> enchantmentNameCache = new HashMap<>();
 
+    private ItemBridge<ItemStack, Player> itemBridgeHook = null;
+
     public HookManager() {
         hookManager = this;
         initNormalHook();
-        initItemHook();
+        if (ConfigManager.configManager.getString("hook-item-method").equalsIgnoreCase("DEFAULT")) {
+            initItemHook();
+        } else {
+            itemBridgeHook = BukkitItemBridge.builder()
+                    .onHookSuccess(p -> TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fUSItemBridge successfully hook into " + p + "."))
+                    .detectSupportedPlugins()
+                    .build();
+        }
         initEnchantHook();
     }
 
@@ -132,6 +144,12 @@ public class HookManager {
     public String parseItemID(ItemStack hookItem) {
         if (!hookItem.hasItemMeta()) {
             return hookItem.getType().name().toLowerCase();
+        }
+        if (itemBridgeHook != null) {
+            Pair<String, String> tempVal1 = itemBridgeHook.getFirstId(hookItem);
+            if (tempVal1 != null) {
+                return tempVal1.right;
+            }
         }
         for (AbstractItemHook itemHook : itemHooks.values()) {
             String tempVal1 = itemHook.getSimplyIDByItemStack(hookItem);

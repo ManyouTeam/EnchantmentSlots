@@ -35,6 +35,7 @@ error-item-only-one: "&#98FB98[EnchantmentSlots] &cYour deenchanter item can not
 error-no-enchantment: "&#98FB98[EnchantmentSlots] &cCan not find any enchantment in your item!"
 error-not-match: "&#98FB98[EnchantmentSlots] &cThis item can not use deenchanter item!"
 deenchant-success: "&#98FB98[EnchantmentSlots] &aSuccessfully deenchanted %enchant%!"
+dupe-removed: "&#98FB98[UltimateShop] &fA illegal item from your inventory has been removed!"
 
 override-lang:
   settings:

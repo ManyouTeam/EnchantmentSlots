@@ -2,6 +2,7 @@ package cn.superiormc.enchantmentslots.listeners;
 
 import cn.superiormc.enchantmentslots.gui.InvGUI;
 import cn.superiormc.enchantmentslots.managers.ConfigManager;
+import cn.superiormc.enchantmentslots.utils.SchedulerUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -63,8 +64,10 @@ public class GUIListener implements Listener {
     @EventHandler
     public void onClose(InventoryCloseEvent e) {
         if (e.getPlayer().equals(player)) {
-            HandlerList.unregisterAll(this);
-            player.updateInventory();
+            SchedulerUtil.runSync(player, () -> {
+                HandlerList.unregisterAll(this);
+                player.updateInventory();
+            });
             gui.closeEventHandle(e.getInventory());
         }
     }

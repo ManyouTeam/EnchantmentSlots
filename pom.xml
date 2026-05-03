@@ -19,7 +19,7 @@
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <revision>4.9.4</revision>
+        <revision>4.9.6</revision>
         <name>EnchantmentSlots</name>
     </properties>
 
@@ -37,12 +37,16 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.5.3</version>
+                <version>3.6.2</version>
                 <configuration>
                     <relocations>
                         <relocation>
                             <pattern>org.bstats</pattern>
                             <shadedPattern>cn.superiormc.enchantmentslots.bstats</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.json</pattern>
+                            <shadedPattern>cn.superiormc.enchantmentslots.libs.json</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -160,6 +164,10 @@
         <repository>
             <id>nightexpress-releases</id>
             <url>https://repo.nightexpressdev.com/releases</url>
+        </repository>
+        <repository>
+            <id>gtemc-repo</id>
+            <url>https://repo.gtemc.net/releases/</url>
         </repository>
     </repositories>
 </project>

@@ -11,6 +11,9 @@ config-files:
 
 debug: false
 
+# Support value: DEFAULT or ITEMBRIDGE
+hook-item-method: 'DEFAULT'
+
 # Settings
 settings:
   # This is when will the plugin trying adds enchantment slot NBT for an enchantable item which also means set fixed
@@ -187,6 +190,7 @@ enchant-used-slot:
 enchant-gui:
   enabled: true
   ignore-click-outside: false
+  anti-dupe-fixes: false
   title: '{lang}'
   size: 27
   item-slot: 11

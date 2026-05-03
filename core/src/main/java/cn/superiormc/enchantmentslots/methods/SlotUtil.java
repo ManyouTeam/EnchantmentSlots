@@ -6,7 +6,6 @@ import cn.superiormc.enchantmentslots.managers.LanguageManager;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -34,7 +33,6 @@ public class SlotUtil {
         item.setItemMeta(meta);
         return item;
     }
-
 
     public static ItemStack setSlot(ItemStack item, int slotValue, boolean override) {
         ItemMeta meta = item.getItemMeta();
