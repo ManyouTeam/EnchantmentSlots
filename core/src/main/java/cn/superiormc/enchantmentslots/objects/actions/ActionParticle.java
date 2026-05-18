@@ -1,6 +1,7 @@
 package cn.superiormc.enchantmentslots.objects.actions;
 
 import cn.superiormc.enchantmentslots.managers.ErrorManager;
+import cn.superiormc.enchantmentslots.utils.SchedulerUtil;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
@@ -26,7 +27,7 @@ public class ActionParticle extends AbstractRunAction {
 
         try {
             Particle particle = Particle.valueOf(particleName.toUpperCase());
-            player.getWorld().spawnParticle(particle, loc, count, offsetX, offsetY, offsetZ, speed);
+            SchedulerUtil.runSync(loc, () -> loc.getWorld().spawnParticle(particle, loc, count, offsetX, offsetY, offsetZ, speed));
         } catch (IllegalArgumentException e) {
             ErrorManager.errorManager.sendErrorMessage("§cInvalid particle name: " + particleName);
         }

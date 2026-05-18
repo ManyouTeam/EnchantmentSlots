@@ -13,7 +13,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class EnchantEcoEnchantsHook extends AbstractEnchantHook {
@@ -38,6 +40,20 @@ public class EnchantEcoEnchantsHook extends AbstractEnchantHook {
             return StringUtils.format(ecoEnchant.getRawDisplayName());
         }
         return null;
+    }
+
+    @Override
+    public List<String> getEnchantDescription(ItemStack item, Enchantment enchantment, Player player) {
+        EcoEnchantLike ecoEnchant = EcoEnchants.INSTANCE.getByID(enchantment.getKey().getKey());
+        if (ecoEnchant == null) {
+            return Collections.emptyList();
+        }
+        return EnchantmentFormattingKt.getFormattedDescription(ecoEnchant, item.getEnchantmentLevel(enchantment), player);
+    }
+
+    @Override
+    public boolean hasEnchantDescription() {
+        return true;
     }
 
     @Override

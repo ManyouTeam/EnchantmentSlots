@@ -3,6 +3,7 @@ package cn.superiormc.enchantmentslots.utils;
 import cn.superiormc.enchantmentslots.EnchantmentSlots;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -45,10 +46,18 @@ public class SchedulerUtil {
         }
     }
 
+    public static void runSync(Location location, Runnable task) {
+        if (EnchantmentSlots.isFolia) {
+            Bukkit.getRegionScheduler().run(EnchantmentSlots.instance, location, scheduledTask -> task.run());
+        } else {
+            Bukkit.getScheduler().runTask(EnchantmentSlots.instance, task);
+        }
+    }
+
     // 在异步线程上运行任务
     public static void runTaskAsynchronously(Runnable task) {
         if (EnchantmentSlots.isFolia) {
-            task.run();
+            Bukkit.getAsyncScheduler().runNow(EnchantmentSlots.instance, scheduledTask -> task.run());
         } else {
             Bukkit.getScheduler().runTaskAsynchronously(EnchantmentSlots.instance, task);
         }

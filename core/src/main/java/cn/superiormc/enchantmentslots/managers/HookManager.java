@@ -22,7 +22,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class HookManager {
@@ -40,9 +42,8 @@ public class HookManager {
     public HookManager() {
         hookManager = this;
         initNormalHook();
-        if (ConfigManager.configManager.getString("hook-item-method").equalsIgnoreCase("DEFAULT")) {
-            initItemHook();
-        } else {
+        initItemHook();
+        if (ConfigManager.configManager.getString("hook-item-method").equalsIgnoreCase("ITEMBRIDGE")) {
             itemBridgeHook = BukkitItemBridge.builder()
                     .onHookSuccess(p -> TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fUSItemBridge successfully hook into " + p + "."))
                     .detectSupportedPlugins()
@@ -115,13 +116,7 @@ public class HookManager {
             registerNewEnchantHook("Aiyatsbus", new EnchantAiyatsbusHook());
         }
         if (CommonUtil.checkPluginLoad("ExcellentEnchants")) {
-            if (CommonUtil.getClass("su.nightexpress.excellentenchants.api.enchantment.EnchantmentData")) {
-                TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §6Warning: Seems that you are using ExcellentEnchants old version, enabled compatibility mode, " +
-                        "this mode will be removed in future updates, please consider update it to latest.");
-                registerNewEnchantHook("ExcellentEnchants", new EnchantExcellentEnchantsLegacyHook());
-            } else {
-                registerNewEnchantHook("ExcellentEnchants", new EnchantExcellentEnchantsHook());
-            }
+            registerNewEnchantHook("ExcellentEnchants", new EnchantExcellentEnchantsHook());
         }
     }
 
@@ -189,6 +184,22 @@ public class HookManager {
         } catch (Throwable throwable) {
             return "ERROR";
         }
+    }
+
+    public List<String> getEnchantDescription(ItemStack item, Enchantment enchantment, Player player) {
+        for (AbstractEnchantHook enchantHook : enchantHooks.values()) {
+            try {
+                if (enchantHook.hasEnchantDescription()) {
+                    List<String> tempVal1 = enchantHook.getEnchantDescription(item, enchantment, player);
+                    if (tempVal1 != null && !tempVal1.isEmpty()) {
+                        return tempVal1;
+                    }
+                }
+            } catch (Throwable ignored) {
+                ignored.printStackTrace();
+            }
+        }
+        return Collections.emptyList();
     }
 
     public Map<Enchantment, Integer> sortEnchantments(ItemMeta meta) {

@@ -55,18 +55,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>su.nightexpress.</groupId>
-            <artifactId>ExcellentEnchant</artifactId>
-            <version>4.0.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/ExcellentEnchants-4.0.0.jar</systemPath>
-        </dependency>
-        <dependency>
             <groupId>su.nightexpress</groupId>
             <artifactId>ExcellentEnchant</artifactId>
-            <version>4.2.1</version>
+            <version>5.4.1</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/ExcellentEnchants-4.2.1.jar</systemPath>
+            <systemPath>${project.basedir}/lib/ExcellentEnchants-5.4.1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>net.Indyuce</groupId>
@@ -204,7 +197,7 @@
             <artifactId>aiyatsbus</artifactId>
             <version>1.0.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/Aiyatsbus-1.0.0-RC.jar</systemPath>
+            <systemPath>${project.basedir}/lib/Aiyatsbus-1.3.0-dev-9.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>net.momirealms</groupId>

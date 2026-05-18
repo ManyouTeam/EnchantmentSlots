@@ -61,17 +61,9 @@ public class AddLore {
         for (String line : ConfigManager.configManager.getStringList(player, "settings.add-lore.display-value")) {
             if (line.equals("{enchants}")) {
                 for (Enchantment enchantment : enchantments.keySet()) {
-                    // Without color code.
-                    String value = ConfigManager.configManager.getString(player, "settings.add-lore.placeholder.enchants.format",
-                            "&6  {enchant_name}"
-                            ,"enchant_name", HookManager.hookManager.getEnchantName(item, enchantment, player, true)
-                            ,"enchant_raw_name", HookManager.hookManager.getEnchantName(item, enchantment, player, false)
-                            ,"enchant_level", EnchantsUtil.getEnchantmentLevel(enchantment, enchantments.get(enchantment), player)
-                            ,"enchant_level_roman", EnchantsUtil.getEnchantmentLevelRoman(enchantment, enchantments.get(enchantment))
-                            ,"enchant_used_slot", EnchantsUtil.getUsedSlotPlaceholder(enchantment, player));
-                    value = lorePrefix + value;
-                    itemLore.add(index, value);
-                    index++;
+                    List<String> values = getEnchantLore(item, enchantment, enchantments.get(enchantment), player, true);
+                    itemLore.addAll(index, values);
+                    index += values.size();
                 }
                 meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                 continue;
@@ -139,13 +131,7 @@ public class AddLore {
             for (String str : itemLore) {
                 if (str.contains("{enchants}")) {
                     for (Enchantment enchantment : enchantments.keySet()) {
-                        newLore.add(ConfigManager.configManager.getString(player, "settings.add-lore.placeholder.enchants.format",
-                                        "&6  {enchant_name}",
-                                        "enchant_name", HookManager.hookManager.getEnchantName(item, enchantment, player, true),
-                                        "enchant_raw_name", HookManager.hookManager.getEnchantName(item, enchantment, player, false),
-                                        "enchant_level", EnchantsUtil.getEnchantmentLevel(enchantment, enchantments.get(enchantment), player),
-                                        "enchant_level_roman", EnchantsUtil.getEnchantmentLevelRoman(enchantment, enchantments.get(enchantment)),
-                                        "enchant_used_slot", EnchantsUtil.getUsedSlotPlaceholder(enchantment, player)));
+                        newLore.addAll(getEnchantLore(item, enchantment, enchantments.get(enchantment), player, false));
                     }
                     continue;
                 }
@@ -166,5 +152,55 @@ public class AddLore {
         }
         EnchantmentSlots.methodUtil.setItemLore(meta, newLore, player);
         return meta;
+    }
+
+    private static List<String> getEnchantLore(ItemStack item, Enchantment enchantment, int level, Player player, boolean addPrefix) {
+        List<String> result = new ArrayList<>();
+        List<String> description = getEnchantDescription(item, enchantment, player);
+        String firstDescription = description.isEmpty() ? "" : description.get(0);
+        String prefix = addPrefix ? lorePrefix : "";
+        String value = ConfigManager.configManager.getString(player, "settings.add-lore.placeholder.enchants.format",
+                "&6  {enchant_name}",
+                "enchant_name", HookManager.hookManager.getEnchantName(item, enchantment, player, true),
+                "enchant_raw_name", HookManager.hookManager.getEnchantName(item, enchantment, player, false),
+                "enchant_level", EnchantsUtil.getEnchantmentLevel(enchantment, level, player),
+                "enchant_level_roman", EnchantsUtil.getEnchantmentLevelRoman(enchantment, level),
+                "enchant_used_slot", EnchantsUtil.getUsedSlotPlaceholder(enchantment, player),
+                "enchant_description", firstDescription);
+        result.add(prefix + value);
+        if (!description.isEmpty()) {
+            String descriptionFormat = ConfigManager.configManager.getString(player,
+                    "settings.add-lore.placeholder.enchants.description.format",
+                    "&7    {enchant_description}");
+            for (String line : description) {
+                result.add(prefix + CommonUtil.modifyString(player, descriptionFormat,
+                        "enchant_description", line,
+                        "enchant_name", HookManager.hookManager.getEnchantName(item, enchantment, player, true),
+                        "enchant_raw_name", HookManager.hookManager.getEnchantName(item, enchantment, player, false),
+                        "enchant_level", EnchantsUtil.getEnchantmentLevel(enchantment, level, player),
+                        "enchant_level_roman", EnchantsUtil.getEnchantmentLevelRoman(enchantment, level),
+                        "enchant_used_slot", EnchantsUtil.getUsedSlotPlaceholder(enchantment, player)));
+            }
+        }
+        return result;
+    }
+
+    private static List<String> getEnchantDescription(ItemStack item, Enchantment enchantment, Player player) {
+        List<String> result = new ArrayList<>();
+        if (!ConfigManager.configManager.getBoolean("settings.add-lore.placeholder.enchants.description.enabled", false)) {
+            return result;
+        }
+        for (String line : HookManager.hookManager.getEnchantDescription(item, enchantment, player)) {
+            if (line == null || line.isEmpty()) {
+                continue;
+            }
+            String[] splitLines = line.split("\\r?\\n|;;");
+            for (String splitLine : splitLines) {
+                if (!splitLine.isEmpty()) {
+                    result.add(splitLine);
+                }
+            }
+        }
+        return result;
     }
 }

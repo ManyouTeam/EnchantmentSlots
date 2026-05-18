@@ -100,11 +100,16 @@ settings:
     placeholder:
       auto-parse: true
       enchants:
-        # Other placeholder: {enchant_level_roman}, {raw_enchant_name}, {enchant_used_slot}
+        # Other placeholders: {enchant_level_roman}, {enchant_raw_name}, {enchant_used_slot}, {enchant_description}
         format: '{lang}'
         sort: true
         auto-add-space: true
         level-hide-one: true
+        description:
+          # Requires supported third-party enchantment plugin, such as EcoEnchants.
+          # Disabled by default. If no supported plugin is installed, this feature does nothing.
+          enabled: false
+          format: '&7    {enchant_description}'
       empty-slots:
         format: '{lang}'
   # Whether you use item tier instead of item ID in Items Match Rule
@@ -190,7 +195,7 @@ enchant-used-slot:
 enchant-gui:
   enabled: true
   ignore-click-outside: false
-  anti-dupe-fixes: false
+  anti-dupe-checker: false
   title: '{lang}'
   size: 27
   item-slot: 11

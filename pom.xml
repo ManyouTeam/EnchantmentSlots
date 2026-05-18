@@ -19,7 +19,7 @@
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <revision>4.9.6</revision>
+        <revision>4.10.0</revision>
         <name>EnchantmentSlots</name>
     </properties>
 
@@ -47,6 +47,10 @@
                         <relocation>
                             <pattern>org.json</pattern>
                             <shadedPattern>cn.superiormc.enchantmentslots.libs.json</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>cn.gtemc.itembridge</pattern>
+                            <shadedPattern>cn.superiormc.enchantmentslots.libs.itembridge</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
