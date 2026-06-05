@@ -2,10 +2,10 @@ package cn.superiormc.enchantmentslots.listeners;
 
 import cn.superiormc.enchantmentslots.gui.InvGUI;
 import cn.superiormc.enchantmentslots.managers.ConfigManager;
-import cn.superiormc.enchantmentslots.utils.SchedulerUtil;
+import cn.superiormc.enchantmentslots.managers.ErrorManager;
+import cn.superiormc.enchantmentslots.managers.ListenerManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -17,18 +17,20 @@ import java.util.Objects;
 
 public class GUIListener implements Listener {
 
-    private Player player;
-    private InvGUI gui = null;
-
-    public GUIListener(InvGUI gui) {
-        this.gui = gui;
-        this.player = gui.getPlayer();
-    }
-
     @EventHandler
     public void onClick(InventoryClickEvent e) {
-        try {
-            if (e.getWhoClicked().equals(player)) {
+        if (e.getWhoClicked() instanceof Player player) {
+            try {
+                InvGUI gui = ListenerManager.listenerManager.getInvGUI(player);
+                if (gui == null) {
+                    return;
+                }
+                if (!e.getView().getTopInventory().equals(gui.getInv())) {
+                    player.closeInventory();
+                    ListenerManager.listenerManager.unregisterListeners(player);
+                    ErrorManager.errorManager.sendErrorMessage("§cError: Found unregistered GUI Listener, now force close the inventory and then delete the excess GUI Listener. If this always heppens, please report to the plugin author.");
+                    return;
+                }
                 if (!Objects.equals(e.getClickedInventory(), gui.getInv())) {
                     if (e.getClick().isShiftClick() || e.getClick() == ClickType.DOUBLE_CLICK || ConfigManager.configManager.getBoolean("enchant-gui.ignore-click-outside", true)) {
                         e.setCancelled(true);
@@ -46,35 +48,48 @@ public class GUIListener implements Listener {
                 if (e.getClick().toString().equals("SWAP_OFFHAND") && e.isCancelled()) {
                     player.getInventory().setItemInOffHand(player.getInventory().getItemInOffHand());
                 }
+            } catch (Exception ep) {
+                ep.printStackTrace();
+                e.setCancelled(true);
             }
-        }
-        catch (Exception ep) {
-            ep.printStackTrace();
-            e.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onDrag(InventoryDragEvent e) {
-        if (e.getWhoClicked().equals(player)) {
+        if (e.getWhoClicked() instanceof Player player) {
+            InvGUI gui = ListenerManager.listenerManager.getInvGUI(player);
+            if (gui == null) {
+                return;
+            }
+            if (!e.getView().getTopInventory().equals(gui.getInv())) {
+                player.closeInventory();
+                ListenerManager.listenerManager.unregisterListeners(player);
+                ErrorManager.errorManager.sendErrorMessage("§cError: Found unregistered GUI Listener, now force close the inventory and then delete the excess GUI Listener. If this always heppens, please report to the plugin author.");
+                return;
+            }
             e.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onClose(InventoryCloseEvent e) {
-        if (e.getPlayer().equals(player)) {
-            SchedulerUtil.runSync(player, () -> {
-                HandlerList.unregisterAll(this);
-                player.updateInventory();
-            });
+        if (e.getPlayer() instanceof Player player) {
+            InvGUI gui = ListenerManager.listenerManager.getInvGUI(player);
+            if (gui == null) {
+                return;
+            }
+            if (!Objects.equals(e.getInventory(), gui.getInv())) {
+                return;
+            }
+            ListenerManager.listenerManager.unregisterNewGUIListener(player, gui);
             gui.closeEventHandle(e.getInventory());
         }
     }
 
     @EventHandler
     public void onSwap(PlayerSwapHandItemsEvent e){
-        if (e.getPlayer().equals(player)) {
+        if (ListenerManager.listenerManager.getInvGUI(e.getPlayer()) != null) {
             e.setCancelled(true);
         }
     }

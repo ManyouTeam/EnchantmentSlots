@@ -2,6 +2,7 @@ package cn.superiormc.enchantmentslots.gui;
 
 import cn.superiormc.enchantmentslots.EnchantmentSlots;
 import cn.superiormc.enchantmentslots.listeners.GUIListener;
+import cn.superiormc.enchantmentslots.managers.ListenerManager;
 import cn.superiormc.enchantmentslots.methods.Dupe;
 import cn.superiormc.enchantmentslots.utils.SchedulerUtil;
 import org.bukkit.Bukkit;
@@ -36,9 +37,8 @@ public abstract class InvGUI extends AbstractGUI {
         constructGUI();
         if (inv != null) {
             SchedulerUtil.runSync(player, () -> {
-                this.guiListener = new GUIListener(this);
-                Bukkit.getPluginManager().registerEvents(guiListener, EnchantmentSlots.instance);
                 player.openInventory(inv);
+                ListenerManager.listenerManager.registerNewGUIListener(player, this);
             });
         }
     }
