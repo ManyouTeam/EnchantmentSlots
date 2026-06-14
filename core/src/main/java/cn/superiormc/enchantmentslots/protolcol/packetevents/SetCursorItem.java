@@ -31,6 +31,6 @@ public class SetCursorItem implements PacketListener {
         }
         com.github.retrooper.packetevents.protocol.item.ItemStack result = SpigotConversionUtil.fromBukkitItemStack(AddLore.autoAddLore(item, player, true));
         serverSetSlot.setStack(result);
-        PlayerCacheListener.hashedStackMap.put(player, HashedStack.fromItemStack(original));
+        PlayerCacheListener.hashedStackMap.put(player.getUniqueId(), HashedStack.fromItemStack(original));
     }
 }

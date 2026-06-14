@@ -1,22 +1,16 @@
 package cn.superiormc.enchantmentslots.gui;
 
-import cn.superiormc.enchantmentslots.EnchantmentSlots;
-import cn.superiormc.enchantmentslots.listeners.GUIListener;
 import cn.superiormc.enchantmentslots.managers.ListenerManager;
 import cn.superiormc.enchantmentslots.methods.Dupe;
 import cn.superiormc.enchantmentslots.utils.SchedulerUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public abstract class InvGUI extends AbstractGUI {
 
     protected Inventory inv;
-
-    public Listener guiListener;
 
     public InvGUI(Player player) {
         super(player);

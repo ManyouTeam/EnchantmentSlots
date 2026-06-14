@@ -54,7 +54,7 @@ public class SetSlots implements PacketListener {
                 if (ConfigManager.configManager.getBoolean("settings.set-slot-trigger.SetSlotPacket.enabled", true)) {
                     SlotUtil.setSlot(targetItem, defaultSlot, false);
                 }
-                if (PlayerCacheListener.loadedPlayers.contains(player) && !ConfigManager.configManager.isIgnore(targetItem) && ConfigManager.configManager.getBoolean("settings.set-slot-trigger.SetSlotPacket.remove-illegal-excess-enchant.enabled", true)) {
+                if (PlayerCacheListener.loadedPlayers.contains(player.getUniqueId()) && !ConfigManager.configManager.isIgnore(targetItem) && ConfigManager.configManager.getBoolean("settings.set-slot-trigger.SetSlotPacket.remove-illegal-excess-enchant.enabled", true)) {
                     SlotUtil.removeExcessEnchantments(targetItem, player);
                 }
             }

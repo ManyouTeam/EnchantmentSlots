@@ -1,6 +1,7 @@
 package cn.superiormc.enchantmentslots;
 
 import cn.superiormc.enchantmentslots.managers.*;
+import cn.superiormc.enchantmentslots.papi.PlaceholderAPIExpansion;
 import cn.superiormc.enchantmentslots.utils.CommonUtil;
 import cn.superiormc.enchantmentslots.utils.SpecialMethodUtil;
 import cn.superiormc.enchantmentslots.utils.TextUtil;
@@ -11,6 +12,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class EnchantmentSlots extends JavaPlugin {
 
     public static EnchantmentSlots instance;
+
+    private Metrics metrics;
 
     public static int yearVersion;
 
@@ -69,6 +72,7 @@ public final class EnchantmentSlots extends JavaPlugin {
         new MatchItemManager();
         new LanguageManager();
         new LicenseManager();
+        metrics = new Metrics(EnchantmentSlots.instance, 23653);
         TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fYour server version is: " + yearVersion + "." + majorVersion + "." + minorVersion + "!");
         TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fPlugin is loaded. Author: PQguanfang.");
     }
@@ -76,6 +80,14 @@ public final class EnchantmentSlots extends JavaPlugin {
     @Override
     public void onDisable() {
         ListenerManager.listenerManager.unregisterAllListener();
+        if (PlaceholderAPIExpansion.papi != null) {
+            PlaceholderAPIExpansion.papi.unregister();
+            PlaceholderAPIExpansion.papi = null;
+        }
+        if (metrics != null) {
+            metrics.shutdown();
+            metrics = null;
+        }
         TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fPlugin is disabled. Author: PQguanfang.");
     }
 }

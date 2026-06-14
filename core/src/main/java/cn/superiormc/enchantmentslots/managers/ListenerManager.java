@@ -4,16 +4,19 @@ import cn.superiormc.enchantmentslots.EnchantmentSlots;
 import cn.superiormc.enchantmentslots.gui.InvGUI;
 import cn.superiormc.enchantmentslots.listeners.*;
 import cn.superiormc.enchantmentslots.methods.AddLore;
-import cn.superiormc.enchantmentslots.protolcol.packetevents.*;
 import cn.superiormc.enchantmentslots.protolcol.eco.EcoDisplayModule;
 import cn.superiormc.enchantmentslots.protolcol.packetevents.*;
 import cn.superiormc.enchantmentslots.utils.CommonUtil;
 import cn.superiormc.enchantmentslots.utils.TextUtil;
 import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.event.PacketListener;
+import com.github.retrooper.packetevents.event.PacketListenerCommon;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -23,6 +26,8 @@ public class ListenerManager {
     public static ListenerManager listenerManager;
 
     private final Map<UUID, InvGUI> listeners = new HashMap<>();
+
+    private final Collection<PacketListenerCommon> packetListeners = new ArrayList<>();
 
     private String plugin;
 
@@ -63,7 +68,7 @@ public class ListenerManager {
                 ConfigManager.configManager.getString("settings.use-listener-plugin", "packetevents"));
         if (plugin.equals("packetevents") && CommonUtil.checkPluginLoad("packetevents")) {
             TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fHooking into packetevents...");
-            PacketEventsListener.registerPacketEventsListener();
+            registerPacketEventsListeners();
             AddLore.lorePrefix = ConfigManager.configManager.getString("settings.add-lore.lore-prefix", "§y");
         } else if (plugin.equals("eco") && CommonUtil.checkPluginLoad("eco")) {
             TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fHooking into eco....");
@@ -94,22 +99,27 @@ public class ListenerManager {
 
     public void unregisterAllListener() {
         HandlerList.unregisterAll(EnchantmentSlots.instance);
-    }
-
-    public String getPlugin() {
-        return plugin;
-    }
-}
-
-class PacketEventsListener {
-    public static void registerPacketEventsListener() {
-        PacketEvents.getAPI().getEventManager().registerListener(new SetSlots(), ConfigManager.configManager.getPriority());
-        PacketEvents.getAPI().getEventManager().registerListener(new WindowItem(), ConfigManager.configManager.getPriority());
-        PacketEvents.getAPI().getEventManager().registerListener(new WindowMerchant(), ConfigManager.configManager.getPriority());
-        PacketEvents.getAPI().getEventManager().registerListener(new SetCreativeSlots(), ConfigManager.configManager.getPriority());
-        if (CommonUtil.getMinorVersion(21, 5)) {
-            PacketEvents.getAPI().getEventManager().registerListener(new SetCursorItem(), ConfigManager.configManager.getPriority());
-            PacketEvents.getAPI().getEventManager().registerListener(new ContainerClick(), ConfigManager.configManager.getPriority());
+        listeners.clear();
+        PlayerCacheListener.clearCaches();
+        if (!packetListeners.isEmpty()) {
+            PacketEvents.getAPI().getEventManager().unregisterListeners(packetListeners.toArray(new PacketListenerCommon[0]));
         }
+        packetListeners.clear();
+    }
+
+    private void registerPacketEventsListeners() {
+        registerPacketListener(new SetSlots());
+        registerPacketListener(new WindowItem());
+        registerPacketListener(new WindowMerchant());
+        registerPacketListener(new SetCreativeSlots());
+        if (CommonUtil.getMinorVersion(21, 5)) {
+            registerPacketListener(new SetCursorItem());
+            registerPacketListener(new ContainerClick());
+        }
+    }
+
+    private void registerPacketListener(PacketListener listener) {
+        packetListeners.add(PacketEvents.getAPI().getEventManager().registerListener(
+                listener, ConfigManager.configManager.getPriority()));
     }
 }

@@ -1,11 +1,12 @@
 package cn.superiormc.enchantmentslots.objects.actions;
 
-import cn.superiormc.enchantmentslots.EnchantmentSlots;
 import cn.superiormc.enchantmentslots.objects.ObjectAction;
 import cn.superiormc.enchantmentslots.utils.SchedulerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 public class ActionDelay extends AbstractRunAction {
 
@@ -22,6 +23,12 @@ public class ActionDelay extends AbstractRunAction {
         }
         long time = singleAction.getSection().getLong("time");
         ObjectAction action = new ObjectAction(chanceSection);
-        SchedulerUtil.runTaskLater(() -> action.runAllActions(player, amount), time);
+        UUID playerId = player.getUniqueId();
+        SchedulerUtil.runTaskLater(() -> {
+            Player onlinePlayer = Bukkit.getPlayer(playerId);
+            if (onlinePlayer != null && onlinePlayer.isOnline()) {
+                action.runAllActions(onlinePlayer, amount);
+            }
+        }, time);
     }
 }

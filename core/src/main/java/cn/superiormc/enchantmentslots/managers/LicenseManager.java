@@ -2,7 +2,6 @@ package cn.superiormc.enchantmentslots.managers;
 
 import cn.superiormc.enchantmentslots.EnchantmentSlots;
 import cn.superiormc.enchantmentslots.utils.TextUtil;
-import org.bstats.bukkit.Metrics;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -40,7 +39,6 @@ public final class LicenseManager {
 
     public LicenseManager() {
         licenseManager = this;
-        new Metrics(EnchantmentSlots.instance, 23653);
         this.valid = checkIllegal("cn.superiormc.enchantmentslots.EnchantmentSlots", "EnchantmentSlots");
 
         detectSourceAndUser();

@@ -18,8 +18,8 @@ public class ContainerClick implements PacketListener {
         WrapperPlayClientClickWindow wrapper = new WrapperPlayClientClickWindow(event);
         Player player = event.getPlayer();
 
-        if (PlayerCacheListener.hashedStackMap.containsKey(player)) {
-            wrapper.setCarriedHashedStack(PlayerCacheListener.hashedStackMap.get(player));
+        if (PlayerCacheListener.hashedStackMap.containsKey(player.getUniqueId())) {
+            wrapper.setCarriedHashedStack(PlayerCacheListener.hashedStackMap.get(player.getUniqueId()));
         }
     }
 }

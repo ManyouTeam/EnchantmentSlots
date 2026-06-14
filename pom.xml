@@ -19,7 +19,7 @@
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <revision>4.10.2</revision>
+        <revision>4.10.3</revision>
         <name>EnchantmentSlots</name>
     </properties>
 
