@@ -4,7 +4,6 @@ import cn.superiormc.enchantmentslots.EnchantmentSlots;
 import cn.superiormc.enchantmentslots.objects.ObjectExtraSlotsItem;
 import cn.superiormc.enchantmentslots.objects.ObjectItemSlot;
 import cn.superiormc.enchantmentslots.utils.TextUtil;
-import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import com.willfp.eco.core.display.DisplayPriority;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -168,12 +167,6 @@ public class ConfigManager {
 
     public long getLong(String path, long defaultValue) {
         return config.getLong(path, defaultValue);
-    }
-
-    public PacketListenerPriority getPriority() {
-        return PacketListenerPriority.valueOf(EnchantmentSlots.instance.getConfig().getString(
-                "settings.add-lore.packet-listener-priority", EnchantmentSlots.instance.getConfig().getString(
-                        "settings.packet-listener-priority", "MONITOR")).toUpperCase());
     }
 
     public DisplayPriority getEcoPriority() {

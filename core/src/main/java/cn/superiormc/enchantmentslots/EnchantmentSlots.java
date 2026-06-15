@@ -80,9 +80,9 @@ public final class EnchantmentSlots extends JavaPlugin {
     @Override
     public void onDisable() {
         ListenerManager.listenerManager.unregisterAllListener();
-        if (PlaceholderAPIExpansion.papi != null) {
-            PlaceholderAPIExpansion.papi.unregister();
-            PlaceholderAPIExpansion.papi = null;
+        if (HookManager.hookManager.papi != null) {
+            HookManager.hookManager.papi.unregister();
+            HookManager.hookManager.papi = null;
         }
         if (metrics != null) {
             metrics.shutdown();

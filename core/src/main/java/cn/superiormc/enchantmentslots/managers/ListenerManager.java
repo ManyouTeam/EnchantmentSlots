@@ -11,6 +11,7 @@ import cn.superiormc.enchantmentslots.utils.TextUtil;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListener;
 import com.github.retrooper.packetevents.event.PacketListenerCommon;
+import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -27,7 +28,7 @@ public class ListenerManager {
 
     private final Map<UUID, InvGUI> listeners = new HashMap<>();
 
-    private final Collection<PacketListenerCommon> packetListeners = new ArrayList<>();
+    private boolean packetEventsRegistered;
 
     private String plugin;
 
@@ -68,7 +69,8 @@ public class ListenerManager {
                 ConfigManager.configManager.getString("settings.use-listener-plugin", "packetevents"));
         if (plugin.equals("packetevents") && CommonUtil.checkPluginLoad("packetevents")) {
             TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fHooking into packetevents...");
-            registerPacketEventsListeners();
+            PacketEventsListener.registerPacketEventsListeners();
+            packetEventsRegistered = true;
             AddLore.lorePrefix = ConfigManager.configManager.getString("settings.add-lore.lore-prefix", "§y");
         } else if (plugin.equals("eco") && CommonUtil.checkPluginLoad("eco")) {
             TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fHooking into eco....");
@@ -91,6 +93,9 @@ public class ListenerManager {
 
     public void unregisterListeners(Player player) {
         listeners.remove(player.getUniqueId());
+        if (packetEventsRegistered) {
+            PacketEventsListener.removePlayer(player.getUniqueId());
+        }
     }
 
     public InvGUI getInvGUI(Player player) {
@@ -101,13 +106,18 @@ public class ListenerManager {
         HandlerList.unregisterAll(EnchantmentSlots.instance);
         listeners.clear();
         PlayerCacheListener.clearCaches();
-        if (!packetListeners.isEmpty()) {
-            PacketEvents.getAPI().getEventManager().unregisterListeners(packetListeners.toArray(new PacketListenerCommon[0]));
+        if (packetEventsRegistered) {
+            PacketEventsListener.unregisterPacketEventsListeners();
+            packetEventsRegistered = false;
         }
-        packetListeners.clear();
     }
+}
 
-    private void registerPacketEventsListeners() {
+class PacketEventsListener {
+
+    private static final Collection<PacketListenerCommon> packetListeners = new ArrayList<>();
+
+    public static void registerPacketEventsListeners() {
         registerPacketListener(new SetSlots());
         registerPacketListener(new WindowItem());
         registerPacketListener(new WindowMerchant());
@@ -118,8 +128,25 @@ public class ListenerManager {
         }
     }
 
-    private void registerPacketListener(PacketListener listener) {
-        packetListeners.add(PacketEvents.getAPI().getEventManager().registerListener(
-                listener, ConfigManager.configManager.getPriority()));
+    public static void unregisterPacketEventsListeners() {
+        if (!packetListeners.isEmpty()) {
+            PacketEvents.getAPI().getEventManager().unregisterListeners(packetListeners.toArray(new PacketListenerCommon[0]));
+        }
+        packetListeners.clear();
+        SetCursorItem.clearCache();
+    }
+
+    public static void removePlayer(UUID playerId) {
+        SetCursorItem.removePlayer(playerId);
+    }
+
+    private static void registerPacketListener(PacketListener listener) {
+        packetListeners.add(PacketEvents.getAPI().getEventManager().registerListener(listener, getPriority()));
+    }
+
+    private static PacketListenerPriority getPriority() {
+        return PacketListenerPriority.valueOf(ConfigManager.configManager.getString(
+                "settings.add-lore.packet-listener-priority",
+                ConfigManager.configManager.getString("settings.packet-listener-priority", "MONITOR")).toUpperCase());
     }
 }

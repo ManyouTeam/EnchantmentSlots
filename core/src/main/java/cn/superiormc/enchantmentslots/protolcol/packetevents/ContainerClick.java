@@ -1,8 +1,8 @@
 package cn.superiormc.enchantmentslots.protolcol.packetevents;
 
-import cn.superiormc.enchantmentslots.listeners.PlayerCacheListener;
 import com.github.retrooper.packetevents.event.PacketListener;
 import com.github.retrooper.packetevents.event.PacketReceiveEvent;
+import com.github.retrooper.packetevents.protocol.item.HashedStack;
 import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientClickWindow;
 import org.bukkit.entity.Player;
@@ -18,8 +18,9 @@ public class ContainerClick implements PacketListener {
         WrapperPlayClientClickWindow wrapper = new WrapperPlayClientClickWindow(event);
         Player player = event.getPlayer();
 
-        if (PlayerCacheListener.hashedStackMap.containsKey(player.getUniqueId())) {
-            wrapper.setCarriedHashedStack(PlayerCacheListener.hashedStackMap.get(player.getUniqueId()));
+        HashedStack hashedStack = SetCursorItem.getHashedStack(player.getUniqueId());
+        if (hashedStack != null) {
+            wrapper.setCarriedHashedStack(hashedStack);
         }
     }
 }

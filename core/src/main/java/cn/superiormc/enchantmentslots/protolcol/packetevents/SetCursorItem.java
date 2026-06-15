@@ -1,6 +1,5 @@
 package cn.superiormc.enchantmentslots.protolcol.packetevents;
 
-import cn.superiormc.enchantmentslots.listeners.PlayerCacheListener;
 import cn.superiormc.enchantmentslots.methods.AddLore;
 import cn.superiormc.enchantmentslots.utils.ItemUtil;
 import com.github.retrooper.packetevents.event.PacketListener;
@@ -12,7 +11,13 @@ import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
 public class SetCursorItem implements PacketListener {
+
+    private static final Map<UUID, HashedStack> hashedStackMap = new ConcurrentHashMap<>();
 
     @Override
     public void onPacketSend(PacketSendEvent event) {
@@ -31,6 +36,18 @@ public class SetCursorItem implements PacketListener {
         }
         com.github.retrooper.packetevents.protocol.item.ItemStack result = SpigotConversionUtil.fromBukkitItemStack(AddLore.autoAddLore(item, player, true));
         serverSetSlot.setStack(result);
-        PlayerCacheListener.hashedStackMap.put(player.getUniqueId(), HashedStack.fromItemStack(original));
+        hashedStackMap.put(player.getUniqueId(), HashedStack.fromItemStack(original));
+    }
+
+    public static HashedStack getHashedStack(UUID playerId) {
+        return hashedStackMap.get(playerId);
+    }
+
+    public static void removePlayer(UUID playerId) {
+        hashedStackMap.remove(playerId);
+    }
+
+    public static void clearCache() {
+        hashedStackMap.clear();
     }
 }
