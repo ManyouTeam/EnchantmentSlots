@@ -43,14 +43,14 @@ public class ListenerManager {
         Bukkit.getPluginManager().registerEvents(new PlayerCacheListener(), EnchantmentSlots.instance);
         Bukkit.getPluginManager().registerEvents(new PlayerEnchantListener(), EnchantmentSlots.instance);
         Bukkit.getPluginManager().registerEvents(new PlayerAnvilListener(), EnchantmentSlots.instance);
-        if (EnchantmentSlots.instance.getConfig().getBoolean("settings.set-slot-trigger.InventoryClickEvent.enabled", true)) {
+        if (ConfigManager.configManager.getBoolean("settings.set-slot-trigger.InventoryClickEvent.enabled", true)) {
             Bukkit.getPluginManager().registerEvents(new PlayerClickListener(), EnchantmentSlots.instance);
         }
-        Bukkit.getPluginManager().registerEvents(new PlayerInventoryListener(), EnchantmentSlots.instance);
+        Bukkit.getPluginManager().registerEvents(new ExtraSlotItemsListener(), EnchantmentSlots.instance);
         if (CommonUtil.getMajorVersion(16)) {
             Bukkit.getPluginManager().registerEvents(new PlayerSmithListener(), EnchantmentSlots.instance);
         }
-        if (EnchantmentSlots.instance.getServer().getPluginManager().isPluginEnabled("EnchantGui")) {
+        if (CommonUtil.checkPluginLoad("EnchantGui")) {
             TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fHooking into EnchantGui...");
             Bukkit.getPluginManager().registerEvents(new EnchantGUIEnchantListener(), EnchantmentSlots.instance);
         }
@@ -58,8 +58,7 @@ public class ListenerManager {
             TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fHooking into QuickShop-Hikari...");
             Bukkit.getPluginManager().registerEvents(new QuickShopListener(), EnchantmentSlots.instance);
         }
-        if (CommonUtil.getMajorVersion(19) && EnchantmentSlots.methodUtil.methodID().equals("paper") &&
-                ConfigManager.configManager.getBoolean("enchant-gui.anti-dupe-checker", false)) {
+        if (CommonUtil.getMajorVersion(19) && EnchantmentSlots.methodUtil.methodID().equals("paper")) {
             Bukkit.getPluginManager().registerEvents(new DupeListener(), EnchantmentSlots.instance);
         }
     }

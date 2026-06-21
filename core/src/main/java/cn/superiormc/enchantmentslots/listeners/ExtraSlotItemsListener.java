@@ -27,7 +27,7 @@ import java.util.Map;
 
 import static cn.superiormc.enchantmentslots.methods.DeenchanterUtil.ENCHANTMENT_SLOTS_EXTRA;
 
-public class PlayerInventoryListener implements Listener {
+public class ExtraSlotItemsListener implements Listener {
 
     @EventHandler (priority = EventPriority.LOWEST)
     public void onExtraItemUse(InventoryClickEvent event) {

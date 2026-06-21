@@ -22,13 +22,21 @@ settings:
     # This option support packetevents only.
     # Enable this maybe improve plugin performance.
     SetSlotPacket:
-      enabled: true
+      enabled: false
       # Only plugin has enchantment slot NBT will be checked.
       remove-illegal-excess-enchant:
         enabled: true
         hide-remove-message: false
         ignore-join-time: -1
         run-sync: true
+    # Require Paper.
+    # A better choice to replace "SetSlotPacket"
+    PlayerInventorySlotChangeEvent:
+      enabled: true
+      # Only plugin has enchantment slot NBT will be checked.
+      remove-illegal-excess-enchant:
+        enabled: true
+        # Other options share same value from "SetSlotPacket" section.
     EnchantItemEvent:
       enabled: true
       # Whether cancel the enchantment event or remove extra enchantment if
