@@ -23,9 +23,7 @@
     </build>
 
     <artifactId>plugin</artifactId>
-    <version>${revision}</version>
     <packaging>jar</packaging>
-    <name>EnchantmentSlots</name>
 
     <dependencies>
         <!-- Core module -->
