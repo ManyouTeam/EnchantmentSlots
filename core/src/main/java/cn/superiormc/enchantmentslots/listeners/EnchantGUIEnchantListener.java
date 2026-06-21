@@ -17,6 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 public class EnchantGUIEnchantListener implements Listener {
+
     @EventHandler
     public void onEnchantItem(PlayerEnchantItemEvent event) {
         Player player = event.getPlayer();

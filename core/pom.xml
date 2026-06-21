@@ -26,11 +26,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.stleary</groupId>
-            <artifactId>JSON-java</artifactId>
-            <version>20230618</version>
-        </dependency>
-        <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
             <version>3.0.2</version>
@@ -142,9 +137,10 @@
         </dependency>
         <dependency>
             <groupId>com.github.LegameMc</groupId>
-            <artifactId>EnchantGui-API</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
+            <artifactId>EnchantGui</artifactId>
+            <version>3.9.3</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/EnchantGui 3.9.3.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.github.MilkBowl</groupId>
@@ -197,7 +193,7 @@
             <artifactId>aiyatsbus</artifactId>
             <version>1.0.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/Aiyatsbus-1.3.0-dev-9.jar</systemPath>
+            <systemPath>${project.basedir}/lib/Aiyatsbus-1.0.0-RC.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>net.momirealms</groupId>
