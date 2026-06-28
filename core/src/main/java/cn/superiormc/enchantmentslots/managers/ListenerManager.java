@@ -1,7 +1,6 @@
 package cn.superiormc.enchantmentslots.managers;
 
 import cn.superiormc.enchantmentslots.EnchantmentSlots;
-import cn.superiormc.enchantmentslots.gui.InvGUI;
 import cn.superiormc.enchantmentslots.listeners.*;
 import cn.superiormc.enchantmentslots.methods.AddLore;
 import cn.superiormc.enchantmentslots.protolcol.eco.EcoDisplayModule;
@@ -18,19 +17,13 @@ import org.bukkit.event.HandlerList;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 public class ListenerManager {
 
     public static ListenerManager listenerManager;
 
-    private final Map<UUID, InvGUI> listeners = new HashMap<>();
-
     private boolean packetEventsRegistered;
-
-    private String plugin;
 
     public ListenerManager() {
         listenerManager = this;
@@ -64,7 +57,7 @@ public class ListenerManager {
     }
 
     private void registerPacketListeners() {
-        plugin = ConfigManager.configManager.getString("settings.add-lore.use-listener-plugin",
+        String plugin = ConfigManager.configManager.getString("settings.add-lore.use-listener-plugin",
                 ConfigManager.configManager.getString("settings.use-listener-plugin", "packetevents"));
         if (plugin.equals("packetevents") && CommonUtil.checkPluginLoad("packetevents")) {
             TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fHooking into packetevents...");
@@ -81,29 +74,15 @@ public class ListenerManager {
         }
     }
 
-    public void registerNewGUIListener(Player player, InvGUI inv) {
-        unregisterListeners(player);
-        listeners.put(player.getUniqueId(), inv);
-    }
-
-    public void unregisterNewGUIListener(Player player, InvGUI inv) {
-        listeners.remove(player.getUniqueId(), inv);
-    }
 
     public void unregisterListeners(Player player) {
-        listeners.remove(player.getUniqueId());
         if (packetEventsRegistered) {
             PacketEventsListener.removePlayer(player.getUniqueId());
         }
     }
 
-    public InvGUI getInvGUI(Player player) {
-        return listeners.get(player.getUniqueId());
-    }
-
     public void unregisterAllListener() {
         HandlerList.unregisterAll(EnchantmentSlots.instance);
-        listeners.clear();
         PlayerCacheListener.clearCaches();
         if (packetEventsRegistered) {
             PacketEventsListener.unregisterPacketEventsListeners();

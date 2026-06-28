@@ -31,7 +31,7 @@ public class EnchantGUI extends InvGUI {
         if (Objects.isNull(inv)) {
             inv = EnchantmentSlots.methodUtil.createNewInv(player,
                     ConfigManager.configManager.getInt("enchant-gui.size", 27),
-                    ConfigManager.configManager.getString(player, "enchant-gui.title", "Enchant UI"));
+                    ConfigManager.configManager.getString(player, "enchant-gui.title", "Enchant UI"), this);
         }
         setItem(ConfigManager.configManager.getInt("enchant-gui.confirm-slot", 22), ItemUtil.buildItemStack(player,
                 ConfigManager.configManager.config.getConfigurationSection("enchant-gui.confirm-item")));

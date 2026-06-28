@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -49,5 +50,5 @@ public interface SpecialMethodUtil {
 
     List<String> getItemLore(ItemMeta meta);
 
-    Inventory createNewInv(Player player, int size, String text);
+    Inventory createNewInv(Player player, int size, String text, InventoryHolder holder);
 }

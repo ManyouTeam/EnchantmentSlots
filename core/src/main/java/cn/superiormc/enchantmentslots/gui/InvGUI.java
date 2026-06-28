@@ -1,14 +1,15 @@
 package cn.superiormc.enchantmentslots.gui;
 
-import cn.superiormc.enchantmentslots.managers.ListenerManager;
 import cn.superiormc.enchantmentslots.methods.Dupe;
 import cn.superiormc.enchantmentslots.utils.SchedulerUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.NonNull;
 
-public abstract class InvGUI extends AbstractGUI {
+public abstract class InvGUI extends AbstractGUI implements InventoryHolder {
 
     protected Inventory inv;
 
@@ -30,10 +31,7 @@ public abstract class InvGUI extends AbstractGUI {
     public void openGUI() {
         constructGUI();
         if (inv != null) {
-            SchedulerUtil.runSync(player, () -> {
-                player.openInventory(inv);
-                ListenerManager.listenerManager.registerNewGUIListener(player, this);
-            });
+            SchedulerUtil.runSync(player, () -> player.openInventory(inv));
         }
     }
 
@@ -41,7 +39,8 @@ public abstract class InvGUI extends AbstractGUI {
         inv.setItem(slot, Dupe.markGuiDisplayItem(item));
     }
 
-    public Inventory getInv() {
+    @Override
+    public @NonNull Inventory getInventory() {
         return inv;
     }
 

@@ -43,7 +43,7 @@ public class DeenchantGUI extends InvGUI {
     protected void constructGUI() {
         if (Objects.isNull(inv)) {
             inv = EnchantmentSlots.methodUtil.createNewInv(player, ConfigManager.configManager.getInt("deenchant-gui.size", 54),
-                    ConfigManager.configManager.getString(player, "deenchant-gui.title", "Deenchant GUI"));
+                    ConfigManager.configManager.getString(player, "deenchant-gui.title", "Deenchant GUI"), this);
         }
         int i = 0;
         for (Enchantment ench : targetItem.getEnchantments().keySet()) {
