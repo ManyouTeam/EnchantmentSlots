@@ -1,7 +1,6 @@
 package cn.superiormc.enchantmentslots;
 
 import cn.superiormc.enchantmentslots.managers.*;
-import cn.superiormc.enchantmentslots.papi.PlaceholderAPIExpansion;
 import cn.superiormc.enchantmentslots.utils.CommonUtil;
 import cn.superiormc.enchantmentslots.utils.SpecialMethodUtil;
 import cn.superiormc.enchantmentslots.utils.TextUtil;
@@ -30,11 +29,11 @@ public final class EnchantmentSlots extends JavaPlugin {
         instance = this;
         try {
             String[] versionParts = Bukkit.getBukkitVersion().split("-")[0].split("\\.");
-            yearVersion = versionParts.length > 0 ? Integer.parseInt(versionParts[0]) : 1;
-            majorVersion = versionParts.length > 1 ? Integer.parseInt(versionParts[1]) : 0;
-            minorVersion = versionParts.length > 2 ? Integer.parseInt(versionParts[2]) : 0;
+            yearVersion = versionParts.length > 0 && versionParts[0].matches("\\d+") ? Integer.parseInt(versionParts[0]) : 1;
+            majorVersion = versionParts.length > 1 && versionParts[1].matches("\\d+") ? Integer.parseInt(versionParts[1]) : 0;
+            minorVersion = versionParts.length > 2 && versionParts[2].matches("\\d+") ? Integer.parseInt(versionParts[2]) : 0;
         } catch (Throwable throwable) {
-            ErrorManager.errorManager.sendErrorMessage("§cError: Can not get your Minecraft version! Default set to 1.0.0.");
+            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cError: Can not get your Minecraft version! Default set to 1.0.0.");
         }
         if (CommonUtil.getClass("com.destroystokyo.paper.PaperConfig") && CommonUtil.getMinorVersion(18, 2)) {
             try {
