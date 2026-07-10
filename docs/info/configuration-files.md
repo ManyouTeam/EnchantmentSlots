@@ -1,0 +1,265 @@
+# 🛠️Configuration files
+
+The plugin generates the following configuration files, some of which will only be generated after you first use this feature.
+
+* `extra_slot_items`: The location for storing extra slot item files.
+* `item_slot_settings`: The location for storing item slot settings files.&#x20;
+* `languages`: The location for storing language files. You can set the language file used by the plugin through the `language` option in the `config.yml` file. You can customize various messages within the plugin game through language files. It is not supported to display the corresponding language file based on the player client language. You can only display the same language for all players.
+
+## Config.yml file content
+
+```yaml
+# EnchantmentSlots by @PQguanfang
+#
+# READ THE WIKI: enchantmentslots.superiormc.cn
+
+# Languages
+config-files:
+  language: en_US
+  # PREMIUM version only
+  per-player-language: true
+  force-parse-mini-message: true
+
+debug: false
+
+# Support value: DEFAULT or ITEMBRIDGE
+hook-item-method: 'DEFAULT'
+
+# Settings
+settings:
+  # This is when will the plugin trying adds enchantment slot NBT for an enchantable item which also means set fixed
+  # enchantment slot for an item.
+  set-slot-trigger:
+    # This option support packetevents only.
+    # Enable this maybe improve plugin performance.
+    SetSlotPacket:
+      enabled: false
+      # Only plugin has enchantment slot NBT will be checked.
+      remove-illegal-excess-enchant:
+        enabled: true
+        hide-remove-message: false
+        ignore-join-time: -1
+        run-sync: true
+    # Require Paper.
+    # A better choice to replace "SetSlotPacket"
+    PlayerInventorySlotChangeEvent:
+      enabled: true
+      # Only plugin has enchantment slot NBT will be checked.
+      remove-illegal-excess-enchant:
+        enabled: true
+        # Other options share same value from "SetSlotPacket" section.
+    EnchantItemEvent:
+      enabled: true
+      # Whether cancel the enchantment event or remove extra enchantment if
+      # item reached slot limit after enchant.
+      cancel-if-reached-slot: false
+    AnvilItemEvent:
+      enabled: true
+      # If your item has display issue after use anvil, you can try to enable this.
+      update-item: false
+    SmithItemEvent:
+      enabled: true
+      # If set to true, we will reset old item enchantment slot and then regenerate new slot
+      # value for new item, enchantments won't affect by this option.
+      reset-previous-slot: true
+      # If set to true, if new generated slot value smaller than existed slot value, we will still
+      # keep use existed value as new upgraded item's slot limit.
+      keep-greater-slot: true
+    # Enable this maybe improve plugin performance.
+    # Maybe has incompatible issue with other plugins.
+    InventoryClickEvent:
+      enabled: true
+  ignore-slot-item:
+    material:
+      - book
+      - enchanted_book
+  add-lore:
+    enabled: true
+    remove-lore-first: true
+    # packetevents only.
+    lore-prefix: "§y"
+    # This option support packetevents only.
+    # Enable this maybe improve plugin performance.
+    only-in-player-inventory: true
+    # Whether only-in-player-inventory option only checks chest UI.
+    check-chests-only: true
+    # Which item will not display lore.
+    black-item:
+      any:
+        material:
+          - book
+          - enchanted_book
+    # Support plugin:
+    #   - eco (Do not change unless you are know what you are doing)
+    #   - packetevents (Classic and stable choice)
+    use-listener-plugin: packetevents
+    # packetevents Support value:
+    #    LOWEST(0),
+    #    LOW(1),
+    #    NORMAL(2),
+    #    HIGH(3),
+    #    HIGHEST(4),
+    #    MONITOR(5)
+    # eco Support value:
+    #    CUSTOM(250),
+    #    LOWEST(100),
+    #    LOW(200),
+    #    HIGH(300),
+    #    HIGHEST(400)
+    # The value after the value just a number help you know it's level, do not type them in option.
+    packet-listener-priority: LOWEST
+    # Does not support other packed-based item, enchants plugins.
+    # Like EcoEnchants, EcoItems. (You can also try eco as use-listener-plugin, then change packet-listener-priority)
+    # They will always put their lore at first location and EnchantmentSlots can do nothing about it.
+    at-first-or-last: false
+    # Do not change this option when server started!
+    # Only change this if your server has stopped!
+    display-value:
+      - "{lang}"
+    placeholder:
+      auto-parse: true
+      enchants:
+        # Other placeholders: {enchant_level_roman}, {enchant_raw_name}, {enchant_used_slot}, {enchant_description}
+        format: '{lang}'
+        sort: true
+        auto-add-space: true
+        level-hide-one: true
+        description:
+          # Requires supported third-party enchantment plugin, such as EcoEnchants.
+          # Disabled by default. If no supported plugin is installed, this feature does nothing.
+          enabled: false
+          format: '&7    {enchant_description}'
+      empty-slots:
+        format: '{lang}'
+  # Whether you use item tier instead of item ID in Items Match Rule
+  # If this item plugin don't have tier, will still use Item ID as identify.
+  # Supported plugins: EcoItems, EcoArmor, MMOItems
+  use-tier-identify-slots: false
+  close-inventory-if-reached-limit: true
+  # Whether cancel add slot or just set item slot to max slot value and still consume add slot item
+  # if item reached max slot limit after using add slot items.
+  cancel-add-slot-if-reached-max-slot: true
+  cache-enchant-name: false
+
+# Enchant Level
+enchant-level:
+  1: '{lang}'
+
+# Enchant Name
+enchant-name:
+  # Default providing vanilla enchantments here.
+  # For third enchantment plugins:
+  # Plugin will auto get enchantment display name that provided by EcoEnchants and ExcellentEnchants
+  # If you are not using the 2 plugins, please using "Enchantment Key: Enchantment Display Name" format
+  # Like:
+  # an_other_enchantment: 'This is just an example here!'
+  protection: '{lang}'
+  fire_protection: '{lang}'
+  feather_falling: '{lang}'
+  blast_protection: '{lang}'
+  projectile_protection: '{lang}'
+  respiration: '{lang}'
+  aqua_affinity: '{lang}'
+  thorns: '{lang}'
+  depth_strider: '{lang}'
+  frost_walker: '{lang}'
+  binding_curse: '{lang}'
+  sharpness: '{lang}'
+  smite: '{lang}'
+  bane_of_arthropods: '{lang}'
+  knockback: '{lang}'
+  fire_aspect: '{lang}'
+  looting: '{lang}'
+  sweeping: '{lang}'
+  # For 1.21+
+  sweeping_edge: '{lang}'
+  efficiency: '{lang}'
+  silk_touch: '{lang}'
+  unbreaking: '{lang}'
+  fortune: '{lang}'
+  power: '{lang}'
+  punch: '{lang}'
+  flame: '{lang}'
+  infinity: '{lang}'
+  luck_of_the_sea: '{lang}'
+  lure: '{lang}'
+  loyalty: '{lang}'
+  impaling: '{lang}'
+  riptide: '{lang}'
+  channeling: '{lang}'
+  multishot: '{lang}'
+  quick_charge: '{lang}'
+  piercing: '{lang}'
+  mending: '{lang}'
+  vanishing_curse: '{lang}'
+  soul_speed: '{lang}'
+  wind_burst: '{lang}'
+  breach: '{lang}'
+  density: '{lang}'
+  lunge: '{lang}'
+
+# Enchant Used Slot
+enchant-used-slot:
+  values:
+    # mending: 2
+  placeholder:
+    0: '{lang}'
+    1: '{lang}'
+    2: '{lang}'
+    3: '{lang}'
+    4: '{lang}'
+    5: '{lang}'
+
+# Enchant UI
+enchant-gui:
+  enabled: true
+  ignore-click-outside: false
+  anti-dupe-checker: false
+  title: '{lang}'
+  size: 27
+  item-slot: 11
+  book-slot: 15
+  confirm-slot: 22
+  confirm-item:
+    material: ANVIL
+    name: '{lang:confirm-item-name}'
+    lore:
+      - '{lang:confirm-item-lore}'
+  custom-item:
+    2:
+      material: PAPER
+      name: '{lang:custom-item-1-name}'
+    6:
+      material: BOOK
+      name: '{lang:custom-item-2-name}'
+  override-allow:
+    sharpness:
+      - 'player_head'
+    mending:
+      - 'player_head'
+
+deenchant-gui:
+  title: '{lang}'
+  size: 54
+  ench-item:
+    - ' '
+    - '&e{lang:click-to-remove}'
+
+common-deenchanter:
+  match-item:
+    has-enchants:
+      - '*'
+  material: BOOK
+  name: '{lang:common-deenchanter-name}'
+  lore:
+    - '{lang:common-deenchanter-lore}'
+
+advanced-deenchanter:
+  match-item:
+    has-enchants:
+      - '*'
+  material: BOOK
+  name: '{lang:advanced-deenchanter-name}'
+  lore:
+    - '{lang:advanced-deenchanter-lore}'
+```
