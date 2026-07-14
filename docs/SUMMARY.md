@@ -30,6 +30,8 @@
 * [↔️Item Slot Settings](enchantment-slot/item-slot-settings.md)
 * [🔴Custom Enchantment Used Slot](enchantment-slot/custom-enchantment-used-slot.md)
 * [🪄Extra Slot Item](enchantment-slot/extra-slot-item.md)
+* [️✂️Remove Slot Item](enchantment-slot/remove-slot-item.md)
+* [📖Deenchant Item](enchantment-slot/deenchant-item.md)
 
 ## ✨Features
 
