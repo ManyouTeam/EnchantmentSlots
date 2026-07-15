@@ -29,6 +29,7 @@ remove-enchants:
     - '*'
   blacklist: []
   order: []
+use-limit: -1
 
 success-actions:
   1:
@@ -56,6 +57,7 @@ fail-actions:
 * `remove-enchants`: Controls which enchantments are eligible and, for `ORDER`, their priority. Enchantment IDs may be written as `sharpness` or as a full namespaced ID such as `minecraft:sharpness`.
 * `success-actions`: The actions executed after one or more enchantments are removed. Use [Action Format](../format/action-format.md). The `{amount}` placeholder is the number of enchantments removed.
 * `fail-actions`: The actions executed when the item cannot remove an enchantment, including a failed condition or item match. Use [Action Format](../format/action-format.md). The `{amount}` placeholder is `0`.
+* `use-limits`: Maximum uses of this config ID on one target item. `-1` means unlimited.
 
 ## Remove Types
 

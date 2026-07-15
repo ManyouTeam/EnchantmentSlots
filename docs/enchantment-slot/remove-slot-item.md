@@ -25,6 +25,7 @@ match-item:
 remove-type: FIXED
 remove-slots: 1
 deenchant-item-mode: RANDOM
+use-limit: -1
 
 return-extra-items:
   enabled: true
@@ -63,6 +64,7 @@ fail-actions:
 * `illegal-slot-check`: Used by `LINKED_EXTRA`. When `true` (the default), removal fails if the current slot limit does not match the original limit plus all tracked extra-slot contributions.
 * `success-actions`: The actions executed after slots are removed. Use Action Format. The `{amount}` placeholder is the number of slots actually removed.
 * `fail-actions`: The actions executed when slots cannot be removed, including a failed condition, item match, linked record check, or an incomplete GUI selection. Use Action Format. The `{amount}` placeholder is `0`.
+* `use-limits`: Maximum uses of this config ID on one target item. `-1` means unlimited.
 
 The slot limit never drops below `1`. Consequently, the actual `{amount}` may be lower than `remove-slots`.
 
