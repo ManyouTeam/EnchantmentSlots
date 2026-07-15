@@ -1,0 +1,14 @@
+display-item:
+  material: SHEARS
+  name: '{lang:remove-slot-linked-a-name}'
+  lore:
+    - '{lang:remove-slot-linked-a-lore}'
+
+match-item:
+  has-slot: 1
+
+remove-type: LINKED_EXTRA
+linked-extra-slot-item: A
+illegal-slot-check: true
+deenchant-item-mode: RANDOM
+use-limit: -1

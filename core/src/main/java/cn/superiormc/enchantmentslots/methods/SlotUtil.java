@@ -3,6 +3,7 @@ package cn.superiormc.enchantmentslots.methods;
 import cn.superiormc.enchantmentslots.EnchantmentSlots;
 import cn.superiormc.enchantmentslots.managers.ConfigManager;
 import cn.superiormc.enchantmentslots.managers.LanguageManager;
+import cn.superiormc.enchantmentslots.objects.ObjectExtraSlotsItem;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -49,8 +50,8 @@ public class SlotUtil {
             meta.getPersistentDataContainer().set(ENCHANTMENT_SLOTS_KEY,
                     PersistentDataType.INTEGER,
                     slotValue);
-            item.setItemMeta(meta);
         }
+        item.setItemMeta(meta);
         return item;
     }
 
@@ -63,10 +64,30 @@ public class SlotUtil {
     }
 
     public static int getSlot(ItemMeta meta) {
-        if (!meta.getPersistentDataContainer().has(ENCHANTMENT_SLOTS_KEY, PersistentDataType.INTEGER)) {
+        int baseSlots = getBaseSlot(meta);
+        long totalSlots = (long) baseSlots + ObjectExtraSlotsItem.getExtraSlots(meta);
+        return totalSlots > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) totalSlots;
+    }
+
+    /** Returns only the item's base slots, excluding all ExtraSlotItem additions. */
+    public static int getBaseSlot(ItemStack item) {
+        return item != null && item.hasItemMeta() ? getBaseSlot(item.getItemMeta()) : 0;
+    }
+
+    public static int getBaseSlot(ItemMeta meta) {
+        if (meta == null) {
             return 0;
         }
-        return meta.getPersistentDataContainer().get(ENCHANTMENT_SLOTS_KEY, PersistentDataType.INTEGER);
+        Integer baseSlots = meta.getPersistentDataContainer().get(ENCHANTMENT_SLOTS_KEY, PersistentDataType.INTEGER);
+        return baseSlots == null ? 0 : Math.max(0, baseSlots);
+    }
+
+    public static boolean hasBaseSlot(ItemStack item) {
+        return item != null && item.hasItemMeta() && hasBaseSlot(item.getItemMeta());
+    }
+
+    public static boolean hasBaseSlot(ItemMeta meta) {
+        return meta != null && meta.getPersistentDataContainer().has(ENCHANTMENT_SLOTS_KEY, PersistentDataType.INTEGER);
     }
 
     public static void removeSlot(ItemStack item) {
@@ -75,6 +96,8 @@ public class SlotUtil {
             return;
         }
         meta.getPersistentDataContainer().remove(ENCHANTMENT_SLOTS_KEY);
+        meta.getPersistentDataContainer().remove(ObjectExtraSlotsItem.USED_EXTRA_SLOTS);
+        item.setItemMeta(meta);
     }
 
     public static ItemStack removeExcessEnchantments(ItemStack item, Player player) {

@@ -3,6 +3,8 @@ package cn.superiormc.enchantmentslots.managers;
 import cn.superiormc.enchantmentslots.EnchantmentSlots;
 import cn.superiormc.enchantmentslots.objects.ObjectExtraSlotsItem;
 import cn.superiormc.enchantmentslots.objects.ObjectItemSlot;
+import cn.superiormc.enchantmentslots.objects.ObjectDeenchantItem;
+import cn.superiormc.enchantmentslots.objects.ObjectRemoveSlotItem;
 import cn.superiormc.enchantmentslots.utils.TextUtil;
 import com.willfp.eco.core.display.DisplayPriority;
 import org.bukkit.Bukkit;
@@ -31,11 +33,17 @@ public class ConfigManager {
 
     public Map<String, ObjectItemSlot> itemSlotMap = new HashMap<>();
 
+    public Map<String, ObjectDeenchantItem> deenchantItemMap = new HashMap<>();
+
+    public Map<String, ObjectRemoveSlotItem> removeSlotItemMap = new HashMap<>();
+
     public ConfigManager() {
         configManager = this;
         this.config = EnchantmentSlots.instance.getConfig();
         initExtraSlotItemConfigs();
         initItemSlotSettingsConfigs();
+        initDeenchantItemConfigs();
+        initRemoveSlotItemConfigs();
     }
 
     private void initExtraSlotItemConfigs() {
@@ -76,6 +84,58 @@ public class ConfigManager {
             dir.mkdir();
         }
         loadItemSlotSettings(dir);
+    }
+
+    private void initDeenchantItemConfigs() {
+        File dir = new File(EnchantmentSlots.instance.getDataFolder(), "deenchant_items");
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+        loadDeenchantItems(dir);
+    }
+
+    private void loadDeenchantItems(File folder) {
+        File[] files = folder.listFiles();
+        if (files == null) return;
+        for (File file : files) {
+            if (file.isDirectory()) {
+                loadDeenchantItems(file);
+            } else if (file.getName().endsWith(".yml")) {
+                String id = file.getName().substring(0, file.getName().length() - 4);
+                if (deenchantItemMap.containsKey(id)) {
+                    ErrorManager.errorManager.sendErrorMessage("&cError: Already loaded a deenchant item config called: " + file.getName() + "!");
+                    continue;
+                }
+                deenchantItemMap.put(id, new ObjectDeenchantItem(id, YamlConfiguration.loadConfiguration(file)));
+                TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " &fLoaded deenchant item: " + id + "!");
+            }
+        }
+    }
+
+    private void initRemoveSlotItemConfigs() {
+        File dir = new File(EnchantmentSlots.instance.getDataFolder(), "remove_slot_items");
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+        loadRemoveSlotItems(dir);
+    }
+
+    private void loadRemoveSlotItems(File folder) {
+        File[] files = folder.listFiles();
+        if (files == null) return;
+        for (File file : files) {
+            if (file.isDirectory()) {
+                loadRemoveSlotItems(file);
+            } else if (file.getName().endsWith(".yml")) {
+                String id = file.getName().substring(0, file.getName().length() - 4);
+                if (removeSlotItemMap.containsKey(id)) {
+                    ErrorManager.errorManager.sendErrorMessage("&cError: Already loaded a remove slot item config called: " + file.getName() + "!");
+                    continue;
+                }
+                removeSlotItemMap.put(id, new ObjectRemoveSlotItem(id, YamlConfiguration.loadConfiguration(file)));
+                TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " &fLoaded remove slot item: " + id + "!");
+            }
+        }
     }
 
     private void loadItemSlotSettings(File folder) {
@@ -124,6 +184,28 @@ public class ConfigManager {
         }
         String id = meta.getPersistentDataContainer().get(ENCHANTMENT_SLOTS_EXTRA, PersistentDataType.STRING);
         return extraSlotsItemMap.get(id);
+    }
+
+    public ItemStack getDeenchantItem(String itemID, Player player) {
+        ObjectDeenchantItem item = deenchantItemMap.get(itemID);
+        return item == null ? null : item.getItem(player);
+    }
+
+    public ObjectDeenchantItem getDeenchantItemValue(ItemStack item) {
+        if (!item.hasItemMeta()) return null;
+        String id = item.getItemMeta().getPersistentDataContainer().get(ObjectDeenchantItem.ENCHANTMENT_SLOTS_DEENCHANT, PersistentDataType.STRING);
+        return id == null ? null : deenchantItemMap.get(id);
+    }
+
+    public ItemStack getRemoveSlotItem(String itemID, Player player) {
+        ObjectRemoveSlotItem item = removeSlotItemMap.get(itemID);
+        return item == null ? null : item.getItem(player);
+    }
+
+    public ObjectRemoveSlotItem getRemoveSlotItemValue(ItemStack item) {
+        if (!item.hasItemMeta()) return null;
+        String id = item.getItemMeta().getPersistentDataContainer().get(ObjectRemoveSlotItem.ENCHANTMENT_SLOTS_REMOVE, PersistentDataType.STRING);
+        return id == null ? null : removeSlotItemMap.get(id);
     }
 
     public boolean getBoolean(String path, boolean defaultValue) {

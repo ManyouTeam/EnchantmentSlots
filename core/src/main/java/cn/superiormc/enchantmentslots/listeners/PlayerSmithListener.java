@@ -22,19 +22,18 @@ public class PlayerSmithListener implements Listener {
             return;
         }
         int defaultSlot = ConfigManager.configManager.getDefaultLimits(item, player);
+        int currentBaseSlots = SlotUtil.getBaseSlot(item);
         int maxEnchantments = SlotUtil.getSlot(item);
         if (ConfigManager.configManager.getBoolean("settings.set-slot-trigger.SmithItemEvent.enabled", true)) {
-            if (ConfigManager.configManager.getBoolean("settings.set-slot-trigger.SmithItemEvent.keep-greater-slot", true) && maxEnchantments > defaultSlot) {
-                defaultSlot = maxEnchantments;
+            if (ConfigManager.configManager.getBoolean("settings.set-slot-trigger.SmithItemEvent.keep-greater-slot", true) && currentBaseSlots > defaultSlot) {
+                defaultSlot = currentBaseSlots;
             }
             if (ConfigManager.configManager.getBoolean("settings.set-slot-trigger.SmithItemEvent.reset-previous-slot", true)) {
                 event.getInventory().setResult(SlotUtil.setSlot(item, defaultSlot, true));
             } else {
                 event.getInventory().setResult(SlotUtil.setSlot(item, defaultSlot, false));
             }
-            if (defaultSlot != maxEnchantments) {
-                maxEnchantments = defaultSlot;
-            }
+            maxEnchantments = SlotUtil.getSlot(item);
         }
         if (!ConfigManager.configManager.isIgnore(item) && EnchantsUtil.getUsedSlot(item) > maxEnchantments) {
             event.setCancelled(true);

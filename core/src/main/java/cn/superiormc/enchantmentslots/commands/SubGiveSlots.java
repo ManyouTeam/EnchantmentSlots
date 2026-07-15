@@ -31,12 +31,14 @@ public class SubGiveSlots extends AbstractCommand {
                 return;
             }
             if (args.length == 1) {
-                SlotUtil.setSlot(targetItem, SlotUtil.getSlot(targetItem) + 1, true);
-                LanguageManager.languageManager.sendStringText(player, "success-set", "amount", String.valueOf(SlotUtil.getSlot(targetItem) + 1));
+                int newBaseSlots = SlotUtil.getBaseSlot(targetItem) + 1;
+                SlotUtil.setSlot(targetItem, newBaseSlots, true);
+                LanguageManager.languageManager.sendStringText(player, "success-set", "amount", String.valueOf(newBaseSlots));
                 return;
             }
-            SlotUtil.setSlot(targetItem, SlotUtil.getSlot(targetItem) + Integer.parseInt(args[1]), true);
-            LanguageManager.languageManager.sendStringText("success-set", "amount", String.valueOf(SlotUtil.getSlot(targetItem) + Integer.parseInt(args[1])));
+            int newBaseSlots = SlotUtil.getBaseSlot(targetItem) + Integer.parseInt(args[1]);
+            SlotUtil.setSlot(targetItem, newBaseSlots, true);
+            LanguageManager.languageManager.sendStringText(player, "success-set", "amount", String.valueOf(newBaseSlots));
             return;
         }
         Player target = Bukkit.getPlayer(args[2]);

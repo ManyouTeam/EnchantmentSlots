@@ -1,7 +1,7 @@
 package cn.superiormc.enchantmentslots.objects;
 
-import cn.superiormc.enchantmentslots.managers.ConfigManager;
 import cn.superiormc.enchantmentslots.managers.MatchItemManager;
+import cn.superiormc.enchantmentslots.utils.CommonUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class ObjectItemSlot {
 
@@ -108,23 +109,10 @@ public class ObjectItemSlot {
 
     private int parseInt(ConfigurationSection section, String key, String defaultValue) {
         String input = section.getString(key, defaultValue);
-        if (input.contains("~")) {
-            // 处理范围的情况
-            String[] range = input.split("~");
-            int start = Integer.parseInt(range[0].trim());
-            int end = Integer.parseInt(range[1].trim());
-            if (autoAddLore) {
-                return end;
-            }
-            if (start > end) {
-                return start;
-            } else {
-                Random random = new Random();
-                return random.nextInt(end - start + 1) + start;
-            }
-        } else {
-            // 处理纯数字的情况
-            return Integer.parseInt(input.trim());
+        int[] range = CommonUtil.parseAddSlotRange(input);
+        if (autoAddLore || range[0] == range[1]) {
+            return range[1];
         }
+        return (int) ThreadLocalRandom.current().nextLong(range[0], (long) range[1] + 1);
     }
 }

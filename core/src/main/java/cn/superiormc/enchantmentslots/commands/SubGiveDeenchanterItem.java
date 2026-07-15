@@ -36,12 +36,7 @@ public class SubGiveDeenchanterItem extends AbstractCommand {
         if (args.length == 4) {
             amount = Integer.parseInt(args[3]);
         }
-        ItemStack item = null;
-        if (args[1].equalsIgnoreCase("common")) {
-            item = DeenchanterUtil.generateCommonDeenchanterItem(target, amount);
-        } else if (args[1].equalsIgnoreCase("advanced")) {
-            item = DeenchanterUtil.generateAdvancedDeenchanterItem(target, amount);
-        }
+        ItemStack item = DeenchanterUtil.generateDeenchantItem(target, args[1], amount);
         if (item == null) {
             LanguageManager.languageManager.sendStringText(player, "error-item-not-found");
             return;
@@ -64,12 +59,7 @@ public class SubGiveDeenchanterItem extends AbstractCommand {
         if (args.length == 4) {
             amount = Integer.parseInt(args[3]);
         }
-        ItemStack item = null;
-        if (args[1].equalsIgnoreCase("common")) {
-            item = DeenchanterUtil.generateCommonDeenchanterItem(target, amount);
-        } else if (args[1].equalsIgnoreCase("advanced")) {
-            item = DeenchanterUtil.generateAdvancedDeenchanterItem(target, amount);
-        }
+        ItemStack item = DeenchanterUtil.generateDeenchantItem(target, args[1], amount);
         if (item == null) {
             LanguageManager.languageManager.sendStringText("error-item-not-found");
             return;
@@ -86,8 +76,7 @@ public class SubGiveDeenchanterItem extends AbstractCommand {
         List<String> tempVal1 = new ArrayList<>();
         switch (args.length) {
             case 2:
-                tempVal1.add("common");
-                tempVal1.add("advanced");
+                tempVal1.addAll(ConfigManager.configManager.deenchantItemMap.keySet());
                 break;
             case 3:
                 for (Player player : Bukkit.getOnlinePlayers()) {

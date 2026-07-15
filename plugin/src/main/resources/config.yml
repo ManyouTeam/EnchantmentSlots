@@ -238,20 +238,16 @@ deenchant-gui:
     - ' '
     - '&e{lang:click-to-remove}'
 
-common-deenchanter:
-  match-item:
-    has-enchants:
-      - '*'
-  material: BOOK
-  name: '{lang:common-deenchanter-name}'
-  lore:
-    - '{lang:common-deenchanter-lore}'
+remove-slot-deenchant-gui:
+  title: '{lang}'
+  size: 54
+  ench-item:
+    - '{lang}'
+  selected-ench-item:
+    - '{lang}'
 
-advanced-deenchanter:
-  match-item:
-    has-enchants:
-      - '*'
-  material: BOOK
-  name: '{lang:advanced-deenchanter-name}'
-  lore:
-    - '{lang:advanced-deenchanter-lore}'
+remove-slot-return-gui:
+  title: '{lang:remove-slot-return-gui-title}'
+  size: 27
+  add-lore:
+    - '{lang}'

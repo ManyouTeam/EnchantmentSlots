@@ -1,0 +1,16 @@
+display-item:
+  material: SHEARS
+  name: '{lang:remove-slot-excess-name}'
+  lore:
+    - '{lang:remove-slot-excess-lore}'
+
+match-item:
+  has-slot: 1
+
+remove-type: EXCESS
+use-limit: -1
+return-extra-items:
+  enabled: true
+  mapping:
+    A: 1
+    B: 5

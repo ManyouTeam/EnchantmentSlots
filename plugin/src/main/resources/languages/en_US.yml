@@ -21,6 +21,28 @@ success-add: "&#98FB98[EnchantmentSlots] &aAdd %amount% extra main hand item enc
 success-set: "&#98FB98[EnchantmentSlots] &aSet main hand item enchantment slot to %amount%!"
 slots-limit-reached: "&#98FB98[EnchantmentSlots] &cYour item has reached its enchantment limits!"
 max-slots-reached: "&#98FB98[EnchantmentSlots] &cYour item can not have more enchantments!"
+item-use-limit-reached: "&#98FB98[EnchantmentSlots] &cThis item has reached the use limit for that consumable! ({used}/{limit})"
+extra-slot-success: "&#98FB98[EnchantmentSlots] &aAdded {amount} enchantment slot(s) to your item!"
+extra-slot-fail-chance: "&#98FB98[EnchantmentSlots] &cThe slot increase failed and the extra slot item broke!"
+extra-slot-fail-condition: "&#98FB98[EnchantmentSlots] &cYou do not meet the conditions for this extra slot item!"
+extra-slot-fail-not-match: "&#98FB98[EnchantmentSlots] &cThis extra slot item cannot be used on that item!"
+extra-slot-fail-no-slots: "&#98FB98[EnchantmentSlots] &cThe target item has no enchantment slot configuration to increase!"
+deenchant-success: "&#98FB98[EnchantmentSlots] &aRemoved {amount} enchantment(s)!"
+deenchant-fail-stack: "&#98FB98[EnchantmentSlots] &cOnly one deenchant item can be used at a time!"
+deenchant-fail-condition: "&#98FB98[EnchantmentSlots] &cYou do not meet the conditions for this deenchant item!"
+deenchant-fail-not-match: "&#98FB98[EnchantmentSlots] &cThis deenchant item cannot be used on that item!"
+deenchant-fail-no-enchantment: "&#98FB98[EnchantmentSlots] &cThe target item has no eligible enchantment to remove!"
+deenchant-fail-incomplete: "&#98FB98[EnchantmentSlots] &cNot enough enchantments were selected; de-enchanting was not completed!"
+remove-slot-success: "&#98FB98[EnchantmentSlots] &aRemoved {amount} enchantment slot(s)!"
+remove-slot-fail-condition: "&#98FB98[EnchantmentSlots] &cYou do not meet the conditions for this slot remover!"
+remove-slot-fail-not-match: "&#98FB98[EnchantmentSlots] &cThis slot remover cannot be used on that item!"
+remove-slot-fail-no-slots: "&#98FB98[EnchantmentSlots] &cThe target item has no removable enchantment slots!"
+remove-slot-fail-no-excess: "&#98FB98[EnchantmentSlots] &cThe target item has no excess enchantment slots!"
+remove-slot-fail-linked-item-not-found: "&#98FB98[EnchantmentSlots] &cThe linked extra slot item configuration does not exist!"
+remove-slot-fail-illegal-data: "&#98FB98[EnchantmentSlots] &cThe target item's linked-use records do not match its current slot limit!"
+remove-slot-fail-no-linked-use: "&#98FB98[EnchantmentSlots] &cThe target item has no matching extra-slot use to reverse!"
+remove-slot-fail-not-enough-enchantments: "&#98FB98[EnchantmentSlots] &cNot enough enchantments can be removed to lower the slot limit!"
+remove-slot-fail-incomplete: "&#98FB98[EnchantmentSlots] &cNot enough enchantments were selected; slot removal was cancelled!"
 same-enchants: "&#98FB98[EnchantmentSlots] &cThis item already has this enchantment!"
 slots-limit-reached-enchant: "&#98FB98[EnchantmentSlots] &cThe enchantments you obtained may be different from what was previously displayed on the enchantment table, as your item exceeded the slot limit after being enchanted, and the plugin automatically removed the excess enchantment"
 slots-limit-reached-after-smith: "&#98FB98[EnchantmentSlots] &cYou can not upgrade this item because after upgrade it will reached enchantment slot limit!"
@@ -34,7 +56,9 @@ error-creative-mode: "&#98FB98[EnchantmentSlots] &cThis feature does not support
 error-item-only-one: "&#98FB98[EnchantmentSlots] &cYour deenchanter item can not be stacked to more than 1 amount!"
 error-no-enchantment: "&#98FB98[EnchantmentSlots] &cCan not find any enchantment in your item!"
 error-not-match: "&#98FB98[EnchantmentSlots] &cThis item can not use deenchanter item!"
-deenchant-success: "&#98FB98[EnchantmentSlots] &aSuccessfully deenchanted %enchant%!"
+error-no-slots: "&#98FB98[EnchantmentSlots] &cThis item has no removable enchantment slots!"
+error-no-excess-slots: "&#98FB98[EnchantmentSlots] &cThis item has no unused enchantment slots!"
+error-not-enough-removable-enchantment: "&#98FB98[EnchantmentSlots] &cThe configured deenchant item cannot remove enough enchantments from this item!"
 dupe-removed: "&#98FB98[EnchantmentSlots] &fA illegal item from your inventory has been removed!"
 
 override-lang:
@@ -114,6 +138,20 @@ override-lang:
   deenchant-gui:
     title: 'Choose enchantments to remove'
 
+  remove-slot-deenchant-gui:
+    title: 'Choose enchantments to remove'
+    ench-item:
+      - '&eClick to select this enchantment for removal'
+    selected-ench-item:
+      - '&aSelected for removal'
+
+  remove-slot-return-gui-title: 'Choose slot return items'
+
+  remove-slot-return-gui:
+    add-lore:
+      - '&7Remaining exchange slots: &e{remaining_slots}'
+      - '&7Exchange cost: &e{slot_cost} slot(s)'
+
   click-to-remove: 'Click to remove'
 
   confirm-item-name: '&eConfirm'
@@ -126,3 +164,20 @@ override-lang:
 
   advanced-deenchanter-name: '&bAdvanced Deenchanter'
   advanced-deenchanter-lore: '&8Can choose which enchantments to remove.'
+
+  extra-slot-a-name: '&dExtra Enchantment Slot &7(+1)'
+  extra-slot-a-lore-1: '&fDrag this item into your item to use!'
+  extra-slot-a-lore-2: '&fApply for all items but have only 50% success rate!'
+
+  extra-slot-b-name: '&dExtra Enchantment Slot &7(+5)'
+  extra-slot-b-lore-1: '&fDrag this item into your item to use!'
+  extra-slot-b-lore-2: '&f100% success.'
+
+  remove-slot-fixed-name: '&cSlot Remover &7(-1)'
+  remove-slot-fixed-lore: '&7Drag onto an item to remove one enchantment slot.'
+
+  remove-slot-excess-name: '&cExcess Slot Remover'
+  remove-slot-excess-lore: '&7Removes all unused enchantment slots.'
+
+  remove-slot-linked-a-name: '&bLinked Slot Remover &7(A)'
+  remove-slot-linked-a-lore: '&7Removes the slots added by Extra Slot Item A only.'

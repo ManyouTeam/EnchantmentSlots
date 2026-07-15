@@ -26,6 +26,11 @@ public class InitManager {
         resourceOutput("item_slots_settings/example.yml", false);
         resourceOutput("extra_slot_items/A.yml", false);
         resourceOutput("extra_slot_items/B.yml", false);
+        resourceOutput("deenchant_items/common.yml", false);
+        resourceOutput("deenchant_items/advanced.yml", false);
+        resourceOutput("remove_slot_items/fixed.yml", false);
+        resourceOutput("remove_slot_items/excess.yml", false);
+        resourceOutput("remove_slot_items/linked_a.yml", false);
     }
 
     public boolean isFirstLoad() {

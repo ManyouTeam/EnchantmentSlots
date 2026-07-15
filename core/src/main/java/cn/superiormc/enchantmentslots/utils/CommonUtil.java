@@ -128,8 +128,7 @@ public class CommonUtil {
         try {
             Class.forName(className);
             return true;
-        }
-        catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             return false;
         }
     }
@@ -203,5 +202,23 @@ public class CommonUtil {
             }
             return spigotSlot;
         }
+    }
+
+    public static int[] parseAddSlotRange(String input) {
+        String[] values = input.split("~", -1);
+        try {
+            if (values.length == 1) {
+                int value = Integer.parseInt(values[0].trim());
+                return new int[]{value, value};
+            }
+            if (values.length == 2) {
+                int first = Integer.parseInt(values[0].trim());
+                int second = Integer.parseInt(values[1].trim());
+                return new int[]{Math.min(first, second), Math.max(first, second)};
+            }
+        } catch (NumberFormatException ignored) {
+            // Invalid values use the documented default.
+        }
+        return new int[]{1, 1};
     }
 }

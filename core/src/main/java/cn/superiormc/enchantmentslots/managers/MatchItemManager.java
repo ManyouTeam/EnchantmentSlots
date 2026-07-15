@@ -42,6 +42,7 @@ public class MatchItemManager {
         registerNewRule(new MaterialTag());
         registerNewRule(new Enchantable());
         registerNewRule(new HasStoredEnchants());
+        registerNewRule(new ESHasSlot());
     }
 
     public void registerNewRule(AbstractMatchItemRule rule) {

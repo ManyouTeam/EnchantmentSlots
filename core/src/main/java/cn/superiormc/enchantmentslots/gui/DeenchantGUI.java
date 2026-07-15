@@ -2,40 +2,53 @@ package cn.superiormc.enchantmentslots.gui;
 
 import cn.superiormc.enchantmentslots.EnchantmentSlots;
 import cn.superiormc.enchantmentslots.managers.ConfigManager;
-import cn.superiormc.enchantmentslots.managers.HookManager;
 import cn.superiormc.enchantmentslots.managers.LanguageManager;
-import cn.superiormc.enchantmentslots.methods.Dupe;
-import cn.superiormc.enchantmentslots.utils.CommonUtil;
+import cn.superiormc.enchantmentslots.methods.EnchantsUtil;
+import cn.superiormc.enchantmentslots.objects.ObjectDeenchantItem;
 import cn.superiormc.enchantmentslots.utils.ItemUtil;
-import cn.superiormc.enchantmentslots.utils.TextUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class DeenchantGUI extends InvGUI {
 
-    private ItemStack targetItem;
+    private final ItemStack targetItem;
 
-    private ItemStack extraItem;
+    private final ObjectDeenchantItem deenchantItem;
 
-    private Map<Integer, Enchantment> enchCache = new HashMap<>();
+    private final int slotLimit;
 
-    public DeenchantGUI(Player player, ItemStack targetItem, ItemStack extraItem) {
+    private int remainingRemovals;
+
+    private final Runnable completeAction;
+
+    private boolean completed;
+
+    private final Map<Integer, Enchantment> enchCache = new HashMap<>();
+
+    public DeenchantGUI(Player player, ItemStack targetItem, ObjectDeenchantItem deenchantItem, int removeAmount, Runnable completeAction) {
+        this(player, targetItem, deenchantItem, removeAmount, -1, completeAction);
+    }
+
+    public static DeenchantGUI forSlotLimit(Player player, ItemStack targetItem, ObjectDeenchantItem deenchantItem, int slotLimit, Runnable completeAction) {
+        return new DeenchantGUI(player, targetItem, deenchantItem, -1, slotLimit, completeAction);
+    }
+
+    private DeenchantGUI(Player player, ItemStack targetItem, ObjectDeenchantItem deenchantItem, int removeAmount, int slotLimit, Runnable completeAction) {
         super(player);
-        if (targetItem == null || targetItem.getType().isAir()) {
-            return;
-        }
-        if (extraItem == null || extraItem.getType().isAir()) {
-            return;
-        }
         this.targetItem = targetItem;
-        this.extraItem = extraItem;
+        this.deenchantItem = deenchantItem;
+        this.remainingRemovals = removeAmount;
+        this.slotLimit = slotLimit;
+        this.completeAction = completeAction == null ? () -> { } : completeAction;
         constructGUI();
     }
 
@@ -45,41 +58,63 @@ public class DeenchantGUI extends InvGUI {
             inv = EnchantmentSlots.methodUtil.createNewInv(player, ConfigManager.configManager.getInt("deenchant-gui.size", 54),
                     ConfigManager.configManager.getString(player, "deenchant-gui.title", "Deenchant GUI"), this);
         }
-        int i = 0;
-        for (Enchantment ench : targetItem.getEnchantments().keySet()) {
-            ItemStack tempItem = ItemUtil.generateEnchantedBook(ench, targetItem.getEnchantments().get(ench));
-            ItemMeta itemMeta = tempItem.getItemMeta();
+        enchCache.clear();
+        inv.clear();
+        int index = 0;
+        for (Enchantment enchantment : deenchantItem.getEligibleEnchantments(targetItem)) {
+            ItemStack displayItem = ItemUtil.generateEnchantedBook(enchantment, targetItem.getEnchantments().get(enchantment));
+            ItemMeta itemMeta = displayItem.getItemMeta();
             List<String> lore = EnchantmentSlots.methodUtil.getItemLore(itemMeta);
-            if (lore == null) {
-                lore = new ArrayList<>();
-            }
+            if (lore == null) lore = new ArrayList<>();
             lore.addAll(ConfigManager.configManager.getStringList(player, "deenchant-gui.ench-item"));
             EnchantmentSlots.methodUtil.setItemLore(itemMeta, lore, player);
-            tempItem.setItemMeta(itemMeta);
-            setItem(i, tempItem);
-            enchCache.put(i, ench);
-            i ++;
-            if (i >= ConfigManager.configManager.getInt("deenchant-gui.size", 54)) {
-                break;
-            }
+            displayItem.setItemMeta(itemMeta);
+            setItem(index, displayItem);
+            enchCache.put(index, enchantment);
+            if (++index >= inv.getSize()) break;
         }
     }
 
     @Override
-    public boolean clickEventHandle(Inventory inventory, ItemStack item, int slot) {
-        Enchantment ench = enchCache.get(slot);
-        if (ench != null && extraItem.getAmount() > 0) {
-            ItemMeta itemMeta = targetItem.getItemMeta();
-            int level = itemMeta.getEnchants().get(ench);
-            itemMeta.removeEnchant(ench);
-            targetItem.setItemMeta(itemMeta);
-            extraItem.setAmount(extraItem.getAmount() - 1);
-            player.getInventory().addItem(ItemUtil.generateEnchantedBook(ench, level));
-            player.closeInventory();
-            LanguageManager.languageManager.sendStringText(player, "deenchant-success", "enchant",
-                    HookManager.hookManager.getEnchantName(item, ench, player, true));
+    public boolean clickEventHandle(Inventory inventory, ItemStack cursor, int slot) {
+        Enchantment enchantment = enchCache.get(slot);
+        if (enchantment == null || isComplete()) {
             return true;
         }
+        if (!deenchantItem.removeEnchantment(player, targetItem, enchantment)) {
+            return true;
+        }
+        if (slotLimit < 0) {
+            remainingRemovals--;
+        }
+        if (isComplete()) {
+            complete();
+            player.closeInventory();
+        } else {
+            constructGUI();
+        }
         return true;
+    }
+
+    private boolean isComplete() {
+        return slotLimit >= 0 ? EnchantsUtil.getUsedSlot(targetItem) <= slotLimit : remainingRemovals <= 0;
+    }
+
+    @Override
+    public void closeEventHandle(Inventory inventory) {
+        // A slot-removal item must still finish when its configured filters cannot
+        // remove enough enchantments, or when the player closes this selection GUI.
+        if (slotLimit >= 0) {
+            complete();
+        } else if (!isComplete() && !completed) {
+            completed = true;
+            LanguageManager.languageManager.sendStringText(player, "deenchant-fail-incomplete");
+        }
+    }
+
+    private void complete() {
+        if (completed) return;
+        completed = true;
+        completeAction.run();
     }
 }

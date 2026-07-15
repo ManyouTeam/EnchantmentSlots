@@ -1,0 +1,19 @@
+display-item:
+  material: SHEARS
+  name: '{lang:remove-slot-fixed-name}'
+  lore:
+    - '{lang:remove-slot-fixed-lore}'
+
+match-item:
+  has-slot: 1
+
+remove-type: FIXED
+remove-slots: 1
+deenchant-item-mode: RANDOM
+use-limit: -1
+
+return-extra-items:
+  enabled: true
+  mapping:
+    A: 1
+    B: 5

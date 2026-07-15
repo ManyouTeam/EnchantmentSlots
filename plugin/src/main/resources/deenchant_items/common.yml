@@ -1,0 +1,23 @@
+display-item:
+  material: BOOK
+  name: '{lang:common-deenchanter-name}'
+  lore:
+    - '{lang:common-deenchanter-lore}'
+
+match-item:
+  has-enchants:
+    - '*'
+
+# RANDOM, ORDER, or GUI
+remove-type: RANDOM
+# Number of enchantments removed when this item is used.
+remove-amount: 1
+# Maximum uses of this config ID on one target item. -1 means unlimited.
+use-limit: -1
+remove-enchants:
+  # An empty whitelist means all enchantments. Use '*' to state that explicitly.
+  whitelist:
+    - '*'
+  # Blacklist always takes precedence over whitelist.
+  blacklist: []
+  order: []

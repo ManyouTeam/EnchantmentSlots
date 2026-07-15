@@ -26,8 +26,9 @@ public class SubSetSlots extends AbstractCommand {
             return;
         }
         if (args.length == 1) {
-            SlotUtil.setSlot(target, SlotUtil.getSlot(target) + 1, true);
-            LanguageManager.languageManager.sendStringText(player, "success-set", "amount", String.valueOf(SlotUtil.getSlot(target) + 1));
+            int newBaseSlots = SlotUtil.getBaseSlot(target) + 1;
+            SlotUtil.setSlot(target, newBaseSlots, true);
+            LanguageManager.languageManager.sendStringText(player, "success-set", "amount", String.valueOf(newBaseSlots));
             return;
         }
         SlotUtil.setSlot(target, Integer.parseInt(args[1]), true);

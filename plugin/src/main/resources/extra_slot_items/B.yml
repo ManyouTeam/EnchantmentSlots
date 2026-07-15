@@ -1,29 +1,17 @@
 display-item:
   material: PAPER
   custom-model-data: 5
-  name: '&dExtra Enchantment Slot &7(+5)'
+  name: '{lang:extra-slot-b-name}'
   lore:
-    - '&fDrag this item into your item to use!'
-    - '&f100% success but only work for diamond sword.'
+    - '{lang:extra-slot-b-lore-1}'
+    - '{lang:extra-slot-b-lore-2}'
 
 add-slots: 5
+use-limit: -1
 
 conditions: []
-success-actions:
-  1:
-    type: sound
-    sound: 'block.note_block.harp'
-  2:
-    type: message
-    message: '&#98FB98[EnchantmentSlots] &aAdd {amount} extra enchantment slot to your item!'
-fail-actions:
-  1:
-    type: sound
-    sound: 'block.note_block.bass'
-  2:
-    type: message
-    message: '&#98FB98[EnchantmentSlots] &cYou are not very lucky, slot item has broken!'
 
 match-item:
-  material:
-    - 'diamond_sword'
+  # material:
+  #   - 'diamond_sword'
+  has-slot: 1

@@ -1,27 +1,15 @@
 display-item:
   material: PAPER
-  name: '&dExtra Enchantment Slot &7(+1)'
+  name: '{lang:extra-slot-a-name}'
   lore:
-    - '&fDrag this item into your item to use!'
-    - '&fApply for all items but have only 50% success rate!'
+    - '{lang:extra-slot-a-lore-1}'
+    - '{lang:extra-slot-a-lore-2}'
 
 add-slots: 1
 chance: 50
+use-limit: -1
 
 conditions: []
-success-actions:
-  1:
-    type: sound
-    sound: 'block.note_block.harp'
-  2:
-    type: message
-    message: '&#98FB98[EnchantmentSlots] &aAdd {amount} extra enchantment slot to your item!'
-fail-actions:
-  1:
-    type: sound
-    sound: 'block.note_block.bass'
-  2:
-    type: message
-    message: '&#98FB98[EnchantmentSlots] &cYou are not very lucky, slot item has broken!'
 
-match-item: []
+match-item:
+  has-slot: 1

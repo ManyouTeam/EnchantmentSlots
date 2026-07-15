@@ -1,0 +1,18 @@
+display-item:
+  material: BOOK
+  name: '{lang:advanced-deenchanter-name}'
+  lore:
+    - '{lang:advanced-deenchanter-lore}'
+
+match-item:
+  has-enchants:
+    - '*'
+
+remove-type: GUI
+remove-amount: 1
+use-limit: -1
+remove-enchants:
+  whitelist:
+    - '*'
+  blacklist: []
+  order: []
