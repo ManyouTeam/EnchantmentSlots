@@ -8,6 +8,7 @@ The plugin generates the following configuration files, some of which will only 
 
 ## Config.yml file content
 
+{% code title="" %}
 ```yaml
 # EnchantmentSlots by @PQguanfang
 #
@@ -33,7 +34,7 @@ settings:
     # This option support packetevents only.
     # Enable this maybe improve plugin performance.
     SetSlotPacket:
-      enabled: false
+      enabled: true
       # Only plugin has enchantment slot NBT will be checked.
       remove-illegal-excess-enchant:
         enabled: true
@@ -43,7 +44,11 @@ settings:
     # Require Paper.
     # A better choice to replace "SetSlotPacket"
     PlayerInventorySlotChangeEvent:
-      enabled: true
+      enabled: false
+      # There is issue when equipment slot change while opening other inventory.
+      # https://github.com/PaperMC/Paper/issues/13991
+      # You should always enable this unless this issue fixed in later Paper version.
+      ignore-equipment-when-open-other-invenotry: true
       # Only plugin has enchantment slot NBT will be checked.
       remove-illegal-excess-enchant:
         enabled: true
@@ -245,21 +250,18 @@ deenchant-gui:
     - ' '
     - '&e{lang:click-to-remove}'
 
-common-deenchanter:
-  match-item:
-    has-enchants:
-      - '*'
-  material: BOOK
-  name: '{lang:common-deenchanter-name}'
-  lore:
-    - '{lang:common-deenchanter-lore}'
+remove-slot-deenchant-gui:
+  title: '{lang}'
+  size: 54
+  ench-item:
+    - '{lang}'
+  selected-ench-item:
+    - '{lang}'
 
-advanced-deenchanter:
-  match-item:
-    has-enchants:
-      - '*'
-  material: BOOK
-  name: '{lang:advanced-deenchanter-name}'
-  lore:
-    - '{lang:advanced-deenchanter-lore}'
+remove-slot-return-gui:
+  title: '{lang:remove-slot-return-gui-title}'
+  size: 27
+  add-lore:
+    - '{lang}'
 ```
+{% endcode %}
