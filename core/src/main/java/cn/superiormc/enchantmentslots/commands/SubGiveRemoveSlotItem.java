@@ -44,8 +44,11 @@ public class SubGiveRemoveSlotItem extends AbstractCommand {
         int amount = args.length == 4 ? Integer.parseInt(args[3]) : 1;
         ItemStack item = ConfigManager.configManager.getRemoveSlotItem(args[1], target);
         if (item == null) {
-            if (sender == null) LanguageManager.languageManager.sendStringText("error-item-not-found");
-            else LanguageManager.languageManager.sendStringText(sender, "error-item-not-found");
+            if (sender == null) {
+                LanguageManager.languageManager.sendStringText("error-item-not-found");
+            } else {
+                LanguageManager.languageManager.sendStringText(sender, "error-item-not-found");
+            }
             return;
         }
         item.setAmount(amount);
@@ -60,9 +63,21 @@ public class SubGiveRemoveSlotItem extends AbstractCommand {
     @Override
     public List<String> getTabResult(String[] args) {
         List<String> result = new ArrayList<>();
-        if (args.length == 2) result.addAll(ConfigManager.configManager.removeSlotItemMap.keySet());
-        else if (args.length == 3) for (Player player : Bukkit.getOnlinePlayers()) result.add(player.getName());
-        else if (args.length == 4) { result.add("1"); result.add("5"); result.add("10"); }
+        switch (args.length) {
+            case 2:
+                result.addAll(ConfigManager.configManager.removeSlotItemMap.keySet());
+                break;
+            case 3:
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    result.add(player.getName());
+                }
+                break;
+            case 4:
+                result.add("1");
+                result.add("5");
+                result.add("10");
+                break;
+        }
         return result;
     }
 }

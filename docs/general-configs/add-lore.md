@@ -39,6 +39,9 @@ You can set content of **Add Lore** at `config.yml` file. For available placehol
       - "&#ff3300Enchantment Slots: {enchant_amount}/{slot_amount}"
       - "{enchants}"
       - "{empty_slots}"
+    # Used for enchanted items without enchantment slot data.
+    display-value-with-no-slot:
+      - "{enchants}"
     placeholder:
       enchants:
         # Other placeholder: {enchant_level_roman}, {raw_enchant_name}
@@ -48,3 +51,8 @@ You can set content of **Add Lore** at `config.yml` file. For available placehol
       empty-slots:
         format: '&7  --- Empty Slot ---'
 ```
+
+`display-value-with-no-slot` controls the lore added to items that do not have
+enchantment slot data. It is separate from `display-value`, so these items can
+show their enchantments and enchantment descriptions without showing slot
+amounts or empty slots.

@@ -9,6 +9,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
@@ -36,13 +37,17 @@ public class AddLore {
             return item;
         }
         int slot = SlotUtil.getSlot(meta);
-        if (slot == 0) {
-            return item;
-        }
         if (ConfigManager.configManager.getBoolean("settings.add-lore.placeholder.auto-parse", true)) {
-            item.setItemMeta(AddLore.parseLore(item, meta, player));
+            item.setItemMeta(AddLore.parseLore(item, meta, player, slot > 0));
         }
         if (!ConfigManager.configManager.canDisplay(item)) {
+            return item;
+        }
+        String displayValuePath = slot == 0
+                ? "settings.add-lore.display-value-with-no-slot"
+                : "settings.add-lore.display-value";
+        List<String> lore = ConfigManager.configManager.getStringList(player, displayValuePath);
+        if (lore.isEmpty()) {
             return item;
         }
         if (meta.hasLore()) {
@@ -58,12 +63,21 @@ public class AddLore {
             index = itemLore.size();
         }
         Map<Enchantment, Integer> enchantments = EnchantsUtil.getEnchantments(item, true);
-        for (String line : ConfigManager.configManager.getStringList(player, "settings.add-lore.display-value")) {
+        for (String line : lore) {
             if (line.equals("{enchants}")) {
                 for (Enchantment enchantment : enchantments.keySet()) {
-                    List<String> values = getEnchantLore(item, enchantment, enchantments.get(enchantment), player, true);
+                    List<String> values = getEnchantLore(item, enchantment, enchantments.get(enchantment), player, true, slot > 0);
                     itemLore.addAll(index, values);
                     index += values.size();
+                }
+                if (meta instanceof EnchantmentStorageMeta) {
+                    ItemFlag flag;
+                    try {
+                        flag = ItemFlag.valueOf("HIDE_STORED_ENCHANTS");
+                    } catch (IllegalArgumentException e) {
+                        flag = ItemFlag.valueOf("HIDE_STORED_ENCHANTMENTS");
+                    }
+                    meta.addItemFlags(flag);
                 }
                 meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                 continue;
@@ -117,6 +131,10 @@ public class AddLore {
     }
 
     public static ItemMeta parseLore(ItemStack item, ItemMeta meta, Player player) {
+        return parseLore(item, meta, player, true);
+    }
+
+    public static ItemMeta parseLore(ItemStack item, ItemMeta meta, Player player, boolean hasSlot) {
         if (!LicenseManager.licenseManager.valid) {
             return meta;
         }
@@ -131,7 +149,7 @@ public class AddLore {
             for (String str : itemLore) {
                 if (str.contains("{enchants}")) {
                     for (Enchantment enchantment : enchantments.keySet()) {
-                        newLore.addAll(getEnchantLore(item, enchantment, enchantments.get(enchantment), player, false));
+                        newLore.addAll(getEnchantLore(item, enchantment, enchantments.get(enchantment), player, false, hasSlot));
                     }
                     continue;
                 }
@@ -154,12 +172,13 @@ public class AddLore {
         return meta;
     }
 
-    private static List<String> getEnchantLore(ItemStack item, Enchantment enchantment, int level, Player player, boolean addPrefix) {
+    private static List<String> getEnchantLore(ItemStack item, Enchantment enchantment, int level, Player player, boolean addPrefix, boolean hasSlot) {
         List<String> result = new ArrayList<>();
         List<String> description = getEnchantDescription(item, enchantment, player);
         String firstDescription = description.isEmpty() ? "" : description.get(0);
         String prefix = addPrefix ? lorePrefix : "";
-        String value = ConfigManager.configManager.getString(player, "settings.add-lore.placeholder.enchants.format",
+        String valuePath = hasSlot ? "settings.add-lore.placeholder.enchants.format" : "settings.add-lore.placeholder.enchants.no-slot-format";
+        String value = ConfigManager.configManager.getString(player, valuePath,
                 "&6  {enchant_name}",
                 "enchant_name", HookManager.hookManager.getEnchantName(item, enchantment, player, true),
                 "enchant_raw_name", HookManager.hookManager.getEnchantName(item, enchantment, player, false),
@@ -169,8 +188,9 @@ public class AddLore {
                 "enchant_description", firstDescription);
         result.add(prefix + value);
         if (!description.isEmpty()) {
+            String descriptionPath = hasSlot ? "settings.add-lore.placeholder.enchants.description.format" : "settings.add-lore.placeholder.enchants.description.no-slot-format";
             String descriptionFormat = ConfigManager.configManager.getString(player,
-                    "settings.add-lore.placeholder.enchants.description.format",
+                    descriptionPath,
                     "&7    {enchant_description}");
             for (String line : description) {
                 result.add(prefix + CommonUtil.modifyString(player, descriptionFormat,

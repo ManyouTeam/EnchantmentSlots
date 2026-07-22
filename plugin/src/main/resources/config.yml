@@ -77,11 +77,11 @@ settings:
     # Whether only-in-player-inventory option only checks chest UI.
     check-chests-only: true
     # Which item will not display lore.
-    black-item:
-      any:
-        material:
-          - book
-          - enchanted_book
+    black-item: []
+    #  any:
+    #    material:
+    #      - book
+    #      - enchanted_book
     # Support plugin:
     #   - eco (Do not change unless you are know what you are doing)
     #   - packetevents (Classic and stable choice)
@@ -109,19 +109,25 @@ settings:
     # Only change this if your server has stopped!
     display-value:
       - "{lang}"
+    # Lore displayed on items without enchantment slot data.
+    # Usually only {enchants} is needed, so slot information is not displayed.
+    display-value-with-no-slot:
+      - "{lang}"
     placeholder:
       auto-parse: true
       enchants:
         # Other placeholders: {enchant_level_roman}, {enchant_raw_name}, {enchant_used_slot}, {enchant_description}
-        format: '{lang}'
+        format: '&6  {enchant_name}{enchant_level}{enchant_used_slot}'
+        no-slot-format: '&6{enchant_name}{enchant_level}{enchant_used_slot}'
         sort: true
         auto-add-space: true
         level-hide-one: true
         description:
           # Requires supported third-party enchantment plugin, such as EcoEnchants.
           # Disabled by default. If no supported plugin is installed, this feature does nothing.
-          enabled: false
+          enabled: true
           format: '&7    {enchant_description}'
+          no-slot-format: '&7  {enchant_description}'
       empty-slots:
         format: '{lang}'
   # Whether you use item tier instead of item ID in Items Match Rule
@@ -140,6 +146,7 @@ enchant-level:
 
 # Enchant Name
 enchant-name:
+  force-override: false
   # Default providing vanilla enchantments here.
   # For third enchantment plugins:
   # Plugin will auto get enchantment display name that provided by EcoEnchants and ExcellentEnchants

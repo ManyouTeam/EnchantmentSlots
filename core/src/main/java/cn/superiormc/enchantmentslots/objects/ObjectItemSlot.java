@@ -1,11 +1,13 @@
 package cn.superiormc.enchantmentslots.objects;
 
+import cn.superiormc.enchantmentslots.EnchantmentSlots;
 import cn.superiormc.enchantmentslots.managers.MatchItemManager;
 import cn.superiormc.enchantmentslots.utils.CommonUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
@@ -45,6 +47,15 @@ public class ObjectItemSlot {
         if (matchItemSection == null || MatchItemManager.matchItemManager.getMatch(matchItemSection, item)) {
             if (addHideEnchantsFlag && autoHideEnchants) {
                 ItemMeta meta = item.getItemMeta();
+                if (meta instanceof EnchantmentStorageMeta) {
+                    ItemFlag flag;
+                    try {
+                        flag = ItemFlag.valueOf("HIDE_STORED_ENCHANTS");
+                    } catch (IllegalArgumentException e) {
+                        flag = ItemFlag.valueOf("HIDE_STORED_ENCHANTMENTS");
+                    }
+                    meta.addItemFlags(flag);
+                }
                 meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                 item.setItemMeta(meta);
             }

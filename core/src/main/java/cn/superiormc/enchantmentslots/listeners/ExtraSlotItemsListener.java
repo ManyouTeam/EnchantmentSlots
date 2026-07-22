@@ -38,11 +38,13 @@ public class ExtraSlotItemsListener implements Listener {
         ItemStack targetItem = event.getCurrentItem();
         ItemStack extraItem = event.getCursor();
         ObjectExtraSlotsItem item = ConfigManager.configManager.getExtraSlotItemValue(extraItem);
-        if (item == null) return;
-        event.setCancelled(true);
+        if (item == null) {
+            return;
+        }
         if (isCreative(player)) {
             return;
         }
+        event.setCancelled(true);
         if (item.hasReachedUseLimit(targetItem)) {
             sendUseLimitReached(player, item.getUseCount(targetItem), item.getUseLimit());
             return;
@@ -104,10 +106,10 @@ public class ExtraSlotItemsListener implements Listener {
         if (deenchantItem == null) {
             return;
         }
-        event.setCancelled(true);
         if (isCreative(player)) {
             return;
         }
+        event.setCancelled(true);
         if (deenchantStack.getAmount() != 1) {
             LanguageManager.languageManager.sendStringText(player, "deenchant-fail-stack");
             return;
@@ -147,14 +149,20 @@ public class ExtraSlotItemsListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onRemoveSlotItemUse(InventoryClickEvent event) {
-        if (!isApplicableClick(event)) return;
+        if (!isApplicableClick(event)) {
+            return;
+        }
         Player player = (Player) event.getWhoClicked();
         ItemStack targetItem = event.getCurrentItem();
         ItemStack removeStack = event.getCursor();
         ObjectRemoveSlotItem removeItem = ConfigManager.configManager.getRemoveSlotItemValue(removeStack);
-        if (removeItem == null) return;
+        if (removeItem == null) {
+            return;
+        }
+        if (isCreative(player)) {
+            return;
+        }
         event.setCancelled(true);
-        if (isCreative(player)) return;
         if (removeItem.hasReachedUseLimit(targetItem)) {
             sendUseLimitReached(player, removeItem.getUseCount(targetItem), removeItem.getUseLimit());
             return;

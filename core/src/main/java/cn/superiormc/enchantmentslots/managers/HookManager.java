@@ -16,7 +16,6 @@ import com.loohp.interactivechat.api.InteractiveChatAPI;
 import com.loohp.interactivechat.objectholders.ICPlayer;
 import com.loohp.interactivechat.objectholders.ICPlayerFactory;
 import me.arasple.mc.trchat.module.internal.hook.HookPlugin;
-import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -167,8 +166,24 @@ public class HookManager {
             if (enchantmentStringMap.containsKey(enchantment)) {
                 return enchantmentStringMap.get(enchantment);
             }
-            String enchantmentName = ConfigManager.configManager.getString(player, "enchant-name." + enchantment.getKey().getKey(), enchantment.getKey().getKey());
-            if (enchantmentName.equals(enchantment.getKey().getKey())) {
+            if (ConfigManager.configManager.getBoolean("enchant-name.force-override", false)) {
+                String enchantmentName = ConfigManager.configManager.getString(player, "enchant-name." + enchantment.getKey().getKey(), enchantment.getKey().getKey());
+                if (enchantmentName.equals(enchantment.getKey().getKey())) {
+                    for (AbstractEnchantHook enchantHook : enchantHooks.values()) {
+                        String tempVal1;
+                        if (showTierColor) {
+                            tempVal1 = enchantHook.getEnchantName(item, enchantment, player);
+                        } else {
+                            tempVal1 = enchantHook.getRawEnchantName(enchantment);
+                        }
+                        if (tempVal1 != null) {
+                            return tempVal1;
+                        }
+                    }
+                }
+                enchantmentStringMap.put(enchantment, enchantmentName);
+                return enchantmentName;
+            } else {
                 for (AbstractEnchantHook enchantHook : enchantHooks.values()) {
                     String tempVal1;
                     if (showTierColor) {
@@ -180,9 +195,8 @@ public class HookManager {
                         return tempVal1;
                     }
                 }
+                return ConfigManager.configManager.getString(player, "enchant-name." + enchantment.getKey().getKey(), enchantment.getKey().getKey());
             }
-            enchantmentStringMap.put(enchantment, enchantmentName);
-            return enchantmentName;
         } catch (Throwable throwable) {
             return "ERROR";
         }

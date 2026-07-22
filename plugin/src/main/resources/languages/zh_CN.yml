@@ -67,9 +67,9 @@ override-lang:
         - "&#ff3300附魔槽位：{used_slot_amount}/{slot_amount}"
         - "{enchants}"
         - "{empty_slots}"
+      display-value-with-no-slot:
+        - "{enchants}"
       placeholder:
-        enchants:
-          format: '&6  {enchant_name}{enchant_level}{enchant_used_slot}'
         empty-slots:
           format: '&7  —— 空槽位 ——'
 

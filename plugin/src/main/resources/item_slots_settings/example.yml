@@ -78,8 +78,6 @@ match-item:
     - golden_spear
     - diamond_spear
     - netherite_spear
-    #- enchanted_book
-    #- book
     - mace
 
 auto-add-lore: false
