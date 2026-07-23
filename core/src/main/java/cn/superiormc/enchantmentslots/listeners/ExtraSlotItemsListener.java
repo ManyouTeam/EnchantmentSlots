@@ -16,10 +16,12 @@ import cn.superiormc.enchantmentslots.utils.SchedulerUtil;
 import org.bukkit.GameMode;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -29,7 +31,29 @@ import java.util.Collections;
 
 public class ExtraSlotItemsListener implements Listener {
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onInteract(PlayerInteractEvent event) {
+        ItemStack item = event.getItem();
+        if (item == null) {
+            return;
+        }
+        ObjectExtraSlotsItem extraItem = ConfigManager.configManager.getExtraSlotItemValue(item);
+        if (extraItem != null) {
+            event.setCancelled(true);
+            return;
+        }
+        ObjectDeenchantItem deenchantItem = ConfigManager.configManager.getDeenchantItemValue(item);
+        if (deenchantItem != null) {
+            event.setCancelled(true);
+            return;
+        }
+        ObjectRemoveSlotItem removeItem = ConfigManager.configManager.getRemoveSlotItemValue(item);
+        if (removeItem != null) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onExtraItemUse(InventoryClickEvent event) {
         if (!isApplicableClick(event)) {
             return;
@@ -94,7 +118,7 @@ public class ExtraSlotItemsListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onDeenchantItemUse(InventoryClickEvent event) {
         if (!isApplicableClick(event)) {
             return;
@@ -147,7 +171,7 @@ public class ExtraSlotItemsListener implements Listener {
         else LanguageManager.languageManager.sendStringText(player, "deenchant-fail-no-enchantment");
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onRemoveSlotItemUse(InventoryClickEvent event) {
         if (!isApplicableClick(event)) {
             return;

@@ -48,13 +48,7 @@ public class ObjectItemSlot {
             if (addHideEnchantsFlag && autoHideEnchants) {
                 ItemMeta meta = item.getItemMeta();
                 if (meta instanceof EnchantmentStorageMeta) {
-                    ItemFlag flag;
-                    try {
-                        flag = ItemFlag.valueOf("HIDE_STORED_ENCHANTS");
-                    } catch (IllegalArgumentException e) {
-                        flag = ItemFlag.valueOf("HIDE_STORED_ENCHANTMENTS");
-                    }
-                    meta.addItemFlags(flag);
+                    meta.addItemFlags(CommonUtil.getHideStoredEnchants());
                 }
                 meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                 item.setItemMeta(meta);

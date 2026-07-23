@@ -7,6 +7,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
@@ -168,6 +169,23 @@ public class CommonUtil {
             mkDir(new File(parentPath));
             dir.mkdir();
         }
+    }
+
+    public static ItemFlag hideStoredEnchants;
+
+    public static ItemFlag getHideStoredEnchants() {
+        if (hideStoredEnchants == null) {
+            try {
+                hideStoredEnchants = ItemFlag.valueOf("HIDE_STORED_ENCHANTS");
+            } catch (IllegalArgumentException e) {
+                try {
+                    hideStoredEnchants = ItemFlag.valueOf("HIDE_STORED_ENCHANTMENTS");
+                } catch (IllegalArgumentException ex) {
+                    hideStoredEnchants = ItemFlag.HIDE_ENCHANTS;
+                }
+            }
+        }
+        return hideStoredEnchants;
     }
 
     public static int convertNMSSlotToBukkitSlot(int slot, int windowID, Player player) {

@@ -43,7 +43,16 @@ public class AddLore {
         if (!ConfigManager.configManager.canDisplay(item)) {
             return item;
         }
-        String displayValuePath = slot == 0
+        boolean noSlot = slot == 0;
+        if (noSlot) {
+            if (!ConfigManager.configManager.getBoolean("settings.add-lore.enable-for-no-slot", true)) {
+                return item;
+            }
+            if (item.hasItemFlag(ItemFlag.HIDE_ENCHANTS) || item.hasItemFlag(CommonUtil.getHideStoredEnchants())) {
+                return item;
+            }
+        }
+        String displayValuePath = noSlot
                 ? "settings.add-lore.display-value-with-no-slot"
                 : "settings.add-lore.display-value";
         List<String> lore = ConfigManager.configManager.getStringList(player, displayValuePath);
@@ -71,13 +80,7 @@ public class AddLore {
                     index += values.size();
                 }
                 if (meta instanceof EnchantmentStorageMeta) {
-                    ItemFlag flag;
-                    try {
-                        flag = ItemFlag.valueOf("HIDE_STORED_ENCHANTS");
-                    } catch (IllegalArgumentException e) {
-                        flag = ItemFlag.valueOf("HIDE_STORED_ENCHANTMENTS");
-                    }
-                    meta.addItemFlags(flag);
+                    meta.addItemFlags(CommonUtil.getHideStoredEnchants());
                 }
                 meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                 continue;

@@ -68,6 +68,7 @@ settings:
       - enchanted_book
   add-lore:
     enabled: true
+    enable-for-no-slot: true
     remove-lore-first: true
     # packetevents only.
     lore-prefix: "§y"
