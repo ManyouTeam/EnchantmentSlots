@@ -8,6 +8,10 @@ match-item:
   has-enchants:
     - '*'
 
+success-actions: []
+
+fail-actions: []
+
 remove-type: GUI
 remove-amount: 1
 use-limit: -1

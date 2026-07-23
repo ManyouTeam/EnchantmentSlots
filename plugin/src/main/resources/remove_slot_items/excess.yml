@@ -7,6 +7,10 @@ display-item:
 match-item:
   has-slot: 1
 
+success-actions: []
+
+fail-actions: []
+
 remove-type: EXCESS
 use-limit: -1
 return-extra-items:

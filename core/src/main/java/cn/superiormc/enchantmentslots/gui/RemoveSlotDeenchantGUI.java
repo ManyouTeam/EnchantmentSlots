@@ -2,7 +2,6 @@ package cn.superiormc.enchantmentslots.gui;
 
 import cn.superiormc.enchantmentslots.EnchantmentSlots;
 import cn.superiormc.enchantmentslots.managers.ConfigManager;
-import cn.superiormc.enchantmentslots.managers.LanguageManager;
 import cn.superiormc.enchantmentslots.methods.EnchantsUtil;
 import cn.superiormc.enchantmentslots.utils.CommonUtil;
 import cn.superiormc.enchantmentslots.utils.ItemUtil;
@@ -19,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class RemoveSlotDeenchantGUI extends InvGUI {
 
@@ -28,17 +28,20 @@ public class RemoveSlotDeenchantGUI extends InvGUI {
 
     private final Runnable completeAction;
 
+    private final Consumer<Player> failAction;
+
     private final Map<Integer, Enchantment> enchCache = new LinkedHashMap<>();
 
     private final Set<Enchantment> selectedEnchantments = new LinkedHashSet<>();
 
     private boolean completed;
 
-    public RemoveSlotDeenchantGUI(Player player, ItemStack targetItem, int slotLimit, Runnable completeAction) {
+    public RemoveSlotDeenchantGUI(Player player, ItemStack targetItem, int slotLimit, Runnable completeAction, Consumer<Player> failAction) {
         super(player);
         this.targetItem = targetItem;
         this.slotLimit = slotLimit;
         this.completeAction = completeAction == null ? () -> { } : completeAction;
+        this.failAction = failAction == null ? ignored -> { } : failAction;
         constructGUI();
     }
 
@@ -119,7 +122,7 @@ public class RemoveSlotDeenchantGUI extends InvGUI {
     @Override
     public void closeEventHandle(Inventory inventory) {
         if (!completed) {
-            LanguageManager.languageManager.sendStringText(player, "remove-slot-fail-incomplete");
+            failAction.accept(player);
         }
     }
 }

@@ -11,6 +11,10 @@ use-limit: -1
 
 conditions: []
 
+success-actions: []
+
+fail-actions: []
+
 match-item:
   # material:
   #   - 'diamond_sword'

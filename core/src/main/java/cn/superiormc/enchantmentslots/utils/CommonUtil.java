@@ -235,7 +235,6 @@ public class CommonUtil {
                 return new int[]{Math.min(first, second), Math.max(first, second)};
             }
         } catch (NumberFormatException ignored) {
-            // Invalid values use the documented default.
         }
         return new int[]{1, 1};
     }

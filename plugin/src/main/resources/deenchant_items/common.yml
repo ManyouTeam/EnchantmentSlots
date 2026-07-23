@@ -8,6 +8,10 @@ match-item:
   has-enchants:
     - '*'
 
+success-actions: []
+
+fail-actions: []
+
 # RANDOM, ORDER, or GUI
 remove-type: RANDOM
 # Number of enchantments removed when this item is used.

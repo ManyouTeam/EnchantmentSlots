@@ -405,8 +405,9 @@ public class TextUtil {
         float volume = 1f;
         float pitch = 1f;
 
-        if (tag.args != null) {
-            String[] args = tag.args.split(",");
+        String soundData = tag.args == null || tag.args.isBlank() ? tag.content : tag.args;
+        if (soundData != null && !soundData.isBlank()) {
+            String[] args = soundData.split(",");
             if (args.length > 0) {
                 try {
                     sound = Sound.valueOf(args[0].trim().toUpperCase());

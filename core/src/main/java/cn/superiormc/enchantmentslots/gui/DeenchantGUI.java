@@ -102,13 +102,12 @@ public class DeenchantGUI extends InvGUI {
 
     @Override
     public void closeEventHandle(Inventory inventory) {
-        // A slot-removal item must still finish when its configured filters cannot
-        // remove enough enchantments, or when the player closes this selection GUI.
         if (slotLimit >= 0) {
             complete();
         } else if (!isComplete() && !completed) {
             completed = true;
             LanguageManager.languageManager.sendStringText(player, "deenchant-fail-incomplete");
+            deenchantItem.doFailAction(player);
         }
     }
 

@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-/** Lets a player choose how removed slots are converted back into extra-slot items. */
 public class RemoveSlotReturnGUI extends InvGUI {
 
     private final Map<String, Integer> mapping;
@@ -31,10 +30,6 @@ public class RemoveSlotReturnGUI extends InvGUI {
         constructGUI();
     }
 
-    /**
-     * Converts slots without opening a GUI when filtering leaves one possible
-     * return item. Returns {@code true} only when that conversion was made.
-     */
     public static boolean settleSingleAvailableChoice(Player player, ObjectRemoveSlotItem removeItem, int remainingSlots) {
         return settleSingleAvailableChoice(player, removeItem.getReturnMapping(), remainingSlots);
     }

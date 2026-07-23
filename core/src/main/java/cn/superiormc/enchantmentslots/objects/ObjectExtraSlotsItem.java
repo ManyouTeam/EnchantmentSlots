@@ -22,7 +22,6 @@ public class ObjectExtraSlotsItem {
 
     public static final NamespacedKey ENCHANTMENT_SLOTS_EXTRA = new NamespacedKey(EnchantmentSlots.instance, "enchantment_extra");
 
-    /** JSON array containing one record for every successful ExtraSlotItem expansion. */
     public static final NamespacedKey USED_EXTRA_SLOTS = new NamespacedKey(EnchantmentSlots.instance, "used_extra_slots");
 
     private final String id;
@@ -39,6 +38,10 @@ public class ObjectExtraSlotsItem {
 
     private final ObjectCondition condition;
 
+    private final ObjectAction successAction;
+
+    private final ObjectAction failAction;
+
     private final ItemUseLimit useLimit;
 
     public ObjectExtraSlotsItem(String id, ConfigurationSection section) {
@@ -54,6 +57,8 @@ public class ObjectExtraSlotsItem {
         this.minAddSlot = Math.max(1, addSlotRange[0]);
         this.maxAddSlot = Math.max(minAddSlot, addSlotRange[1]);
         this.condition = new ObjectCondition(section.getConfigurationSection("conditions"));
+        this.successAction = new ObjectAction(section.getConfigurationSection("success-actions"));
+        this.failAction = new ObjectAction(section.getConfigurationSection("fail-actions"));
         this.useLimit = new ItemUseLimit("extra-slot", id, section);
         this.section = section;
     }
@@ -99,7 +104,14 @@ public class ObjectExtraSlotsItem {
         return id;
     }
 
-    /** Adds one successful use and the actual number of extra slots it contributed. */
+    public void doSuccessAction(Player player, int amount) {
+        successAction.runAllActions(player, amount);
+    }
+
+    public void doFailAction(Player player) {
+        failAction.runAllActions(player, 0);
+    }
+
     public static void recordUsedSlots(ItemStack targetItem, String extraItemId, int slots) {
         if (slots <= 0 || extraItemId == null || extraItemId.isEmpty()
                 || targetItem == null || !SlotUtil.hasBaseSlot(targetItem)) return;
@@ -109,7 +121,6 @@ public class ObjectExtraSlotsItem {
         saveUsedSlots(targetItem, usedSlots);
     }
 
-    /** Returns the actual slots from the most recently recorded use. */
     public static int getNextRecordedSlots(ItemStack targetItem, String extraItemId) {
         if (targetItem == null || !targetItem.hasItemMeta()) return 0;
         List<UsedSlots> usedSlots = getUsedSlots(targetItem.getItemMeta());
@@ -121,10 +132,6 @@ public class ObjectExtraSlotsItem {
         return 0;
     }
 
-    /**
-     * Consumes slots from one, most recently recorded use. Returns true when
-     * that complete ExtraSlotItem use has been reversed.
-     */
     public static boolean consumeLatestRecordedSlots(ItemStack targetItem, String extraItemId, int slots) {
         if (slots <= 0 || targetItem == null || !targetItem.hasItemMeta()) return false;
         List<UsedSlots> usedSlots = getUsedSlots(targetItem.getItemMeta());
@@ -144,21 +151,28 @@ public class ObjectExtraSlotsItem {
         return true;
     }
 
-    /** Removes up to {@code slots} from the newest extra-slot records. */
     public static int consumeRecordedSlots(ItemStack targetItem, int slots) {
-        if (slots <= 0 || targetItem == null || !targetItem.hasItemMeta()) return 0;
+        if (slots <= 0 || targetItem == null || !targetItem.hasItemMeta()) {
+            return 0;
+        }
         List<UsedSlots> usedSlots = getUsedSlots(targetItem.getItemMeta());
-        if (usedSlots == null) return 0;
+        if (usedSlots == null) {
+            return 0;
+        }
         int remaining = slots;
         for (int i = usedSlots.size() - 1; i >= 0 && remaining > 0; i--) {
             UsedSlots used = usedSlots.get(i);
             int consumed = Math.min(remaining, used.slots);
             used.slots -= consumed;
             remaining -= consumed;
-            if (used.slots == 0) usedSlots.remove(i);
+            if (used.slots == 0) {
+                usedSlots.remove(i);
+            }
         }
         int consumed = slots - remaining;
-        if (consumed > 0) saveUsedSlots(targetItem, usedSlots);
+        if (consumed > 0) {
+            saveUsedSlots(targetItem, usedSlots);
+        }
         return consumed;
     }
 
@@ -170,11 +184,12 @@ public class ObjectExtraSlotsItem {
         List<UsedSlots> usedSlots = getUsedSlots(meta);
         if (usedSlots == null) return 0;
         long total = 0;
-        for (UsedSlots used : usedSlots) total += used.slots;
+        for (UsedSlots used : usedSlots) {
+            total += used.slots;
+        }
         return total > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) total;
     }
 
-    /** Checks that base-slot data exists and all extra-slot records are valid. */
     public static boolean isRecordedSlotAmountConsistent(ItemStack targetItem) {
         if (!SlotUtil.hasBaseSlot(targetItem)) return false;
         List<UsedSlots> usedSlots = getUsedSlots(targetItem.getItemMeta());

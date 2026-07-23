@@ -7,6 +7,10 @@ display-item:
 match-item:
   has-slot: 1
 
+success-actions: []
+
+fail-actions: []
+
 remove-type: LINKED_EXTRA
 linked-extra-slot-item: A
 illegal-slot-check: true

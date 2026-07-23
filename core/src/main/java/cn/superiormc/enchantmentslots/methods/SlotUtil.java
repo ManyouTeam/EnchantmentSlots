@@ -69,7 +69,6 @@ public class SlotUtil {
         return totalSlots > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) totalSlots;
     }
 
-    /** Returns only the item's base slots, excluding all ExtraSlotItem additions. */
     public static int getBaseSlot(ItemStack item) {
         return item != null && item.hasItemMeta() ? getBaseSlot(item.getItemMeta()) : 0;
     }

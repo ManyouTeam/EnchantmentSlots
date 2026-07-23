@@ -4,7 +4,6 @@ import cn.superiormc.enchantmentslots.managers.ConfigManager;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-/** Backwards-compatible factory for configured deenchant items. */
 public class DeenchanterUtil {
 
     public static ItemStack generateDeenchantItem(Player player, String id, int amount) {

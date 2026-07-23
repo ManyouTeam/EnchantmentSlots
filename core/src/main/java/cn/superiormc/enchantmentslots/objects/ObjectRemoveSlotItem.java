@@ -51,6 +51,10 @@ public class ObjectRemoveSlotItem {
 
     private final ObjectCondition condition;
 
+    private final ObjectAction successAction;
+
+    private final ObjectAction failAction;
+
     private final ItemUseLimit useLimit;
 
     public ObjectRemoveSlotItem(String id, ConfigurationSection section) {
@@ -74,6 +78,8 @@ public class ObjectRemoveSlotItem {
             }
         }
         this.condition = new ObjectCondition(section.getConfigurationSection("conditions"));
+        this.successAction = new ObjectAction(section.getConfigurationSection("success-actions"));
+        this.failAction = new ObjectAction(section.getConfigurationSection("fail-actions"));
         this.useLimit = new ItemUseLimit("remove-slot", id, section);
     }
 
@@ -153,6 +159,14 @@ public class ObjectRemoveSlotItem {
 
     public Map<String, Integer> getReturnMapping() {
         return returnMapping;
+    }
+
+    public void doSuccessAction(Player player, int amount) {
+        successAction.runAllActions(player, amount);
+    }
+
+    public void doFailAction(Player player) {
+        failAction.runAllActions(player, 0);
     }
 
     public boolean hasReachedUseLimit(ItemStack targetItem) {

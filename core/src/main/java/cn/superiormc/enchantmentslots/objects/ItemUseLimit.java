@@ -66,7 +66,6 @@ public final class ItemUseLimit {
                     counts.put(entryKey, count);
                 }
             } catch (IllegalArgumentException ignored) {
-                // Ignore malformed entries without blocking item use.
             }
         }
         return counts;

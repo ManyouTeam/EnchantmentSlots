@@ -46,6 +46,10 @@ public class ObjectDeenchantItem {
 
     private final ObjectCondition condition;
 
+    private final ObjectAction successAction;
+
+    private final ObjectAction failAction;
+
     private final ItemUseLimit useLimit;
 
     public ObjectDeenchantItem(String id, ConfigurationSection section) {
@@ -59,6 +63,8 @@ public class ObjectDeenchantItem {
         this.blacklist = getList(enchantSection, "blacklist", section.getStringList("enchant-blacklist"));
         this.order = getList(enchantSection, "order", section.getStringList("enchant-order"));
         this.condition = new ObjectCondition(section.getConfigurationSection("conditions"));
+        this.successAction = new ObjectAction(section.getConfigurationSection("success-actions"));
+        this.failAction = new ObjectAction(section.getConfigurationSection("fail-actions"));
         this.useLimit = new ItemUseLimit("deenchant", id, section);
     }
 
@@ -170,6 +176,14 @@ public class ObjectDeenchantItem {
 
     public RemoveType getRemoveType() {
         return removeType;
+    }
+
+    public void doSuccessAction(Player player, int amount) {
+        successAction.runAllActions(player, amount);
+    }
+
+    public void doFailAction(Player player) {
+        failAction.runAllActions(player, 0);
     }
 
     public boolean hasReachedUseLimit(ItemStack targetItem) {

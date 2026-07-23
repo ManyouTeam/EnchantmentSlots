@@ -11,5 +11,9 @@ use-limit: -1
 
 conditions: []
 
+success-actions: []
+
+fail-actions: []
+
 match-item:
   has-slot: 1

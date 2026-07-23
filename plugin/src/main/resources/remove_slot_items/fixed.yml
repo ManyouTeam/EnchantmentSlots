@@ -7,6 +7,10 @@ display-item:
 match-item:
   has-slot: 1
 
+success-actions: []
+
+fail-actions: []
+
 remove-type: FIXED
 remove-slots: 1
 deenchant-item-mode: RANDOM

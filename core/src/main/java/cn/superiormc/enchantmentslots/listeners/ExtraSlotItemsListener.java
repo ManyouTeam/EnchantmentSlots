@@ -16,7 +16,6 @@ import cn.superiormc.enchantmentslots.utils.SchedulerUtil;
 import org.bukkit.GameMode;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -66,44 +65,54 @@ public class ExtraSlotItemsListener implements Listener {
             return;
         }
         if (isCreative(player)) {
+            item.doFailAction(player);
             return;
         }
         event.setCancelled(true);
         if (item.hasReachedUseLimit(targetItem)) {
             sendUseLimitReached(player, item.getUseCount(targetItem), item.getUseLimit());
+            item.doFailAction(player);
             return;
         }
         if (!item.meetsConditions(player)) {
             LanguageManager.languageManager.sendStringText(player, "extra-slot-fail-condition");
+            item.doFailAction(player);
             return;
         }
         if (!item.matchesItem(targetItem)) {
             LanguageManager.languageManager.sendStringText(player, "extra-slot-fail-not-match");
+            item.doFailAction(player);
             return;
         }
         if (!SlotUtil.hasBaseSlot(targetItem)) {
             LanguageManager.languageManager.sendStringText(player, "extra-slot-fail-no-slots");
+            item.doFailAction(player);
             return;
         }
         int currentSlots = SlotUtil.getSlot(targetItem);
         int maxValue = ConfigManager.configManager.getMaxLimits(targetItem, player);
         if (maxValue > 0 && currentSlots >= maxValue) {
             LanguageManager.languageManager.sendStringText(player, "max-slots-reached");
+            item.doFailAction(player);
             return;
         }
         int value = item.getAddSlot();
         if (maxValue > 0 && currentSlots + value > maxValue) {
             if (ConfigManager.configManager.getBoolean("settings.cancel-add-slot-if-reached-max-slot", true)) {
                 LanguageManager.languageManager.sendStringText(player, "max-slots-reached");
+                item.doFailAction(player);
             } else {
                 extraItem.setAmount(extraItem.getAmount() - 1);
                 item.recordUse(targetItem);
                 if (value == 0) {
                     LanguageManager.languageManager.sendStringText(player, "extra-slot-fail-chance");
+                    item.doFailAction(player);
                 } else {
                     int addedSlots = maxValue - currentSlots;
                     ObjectExtraSlotsItem.recordUsedSlots(targetItem, item.getId(), addedSlots);
-                    LanguageManager.languageManager.sendStringText(player, "extra-slot-success", "amount", String.valueOf(addedSlots));
+                    LanguageManager.languageManager.sendStringText(player, "extra-slot-success",
+                            "amount", String.valueOf(addedSlots));
+                    item.doSuccessAction(player, addedSlots);
                 }
             }
             return;
@@ -112,9 +121,12 @@ public class ExtraSlotItemsListener implements Listener {
         item.recordUse(targetItem);
         if (value == 0) {
             LanguageManager.languageManager.sendStringText(player, "extra-slot-fail-chance");
+            item.doFailAction(player);
         } else {
             ObjectExtraSlotsItem.recordUsedSlots(targetItem, item.getId(), value);
-            LanguageManager.languageManager.sendStringText(player, "extra-slot-success", "amount", String.valueOf(value));
+            LanguageManager.languageManager.sendStringText(player, "extra-slot-success",
+                    "amount", String.valueOf(value));
+            item.doSuccessAction(player, value);
         }
     }
 
@@ -131,27 +143,33 @@ public class ExtraSlotItemsListener implements Listener {
             return;
         }
         if (isCreative(player)) {
+            deenchantItem.doFailAction(player);
             return;
         }
         event.setCancelled(true);
         if (deenchantStack.getAmount() != 1) {
             LanguageManager.languageManager.sendStringText(player, "deenchant-fail-stack");
+            deenchantItem.doFailAction(player);
             return;
         }
         if (deenchantItem.hasReachedUseLimit(targetItem)) {
             sendUseLimitReached(player, deenchantItem.getUseCount(targetItem), deenchantItem.getUseLimit());
+            deenchantItem.doFailAction(player);
             return;
         }
         if (!deenchantItem.meetsConditions(player)) {
             LanguageManager.languageManager.sendStringText(player, "deenchant-fail-condition");
+            deenchantItem.doFailAction(player);
             return;
         }
         if (!deenchantItem.matchesItem(targetItem)) {
             LanguageManager.languageManager.sendStringText(player, "deenchant-fail-not-match");
+            deenchantItem.doFailAction(player);
             return;
         }
         if (deenchantItem.getEligibleEnchantments(targetItem).isEmpty()) {
             LanguageManager.languageManager.sendStringText(player, "deenchant-fail-no-enchantment");
+            deenchantItem.doFailAction(player);
             return;
         }
         deenchantStack.setAmount(0);
@@ -160,15 +178,21 @@ public class ExtraSlotItemsListener implements Listener {
             DeenchantGUI gui = new DeenchantGUI(player, targetItem, deenchantItem, deenchantItem.getRemoveAmount(), () -> {
                 LanguageManager.languageManager.sendStringText(player, "deenchant-success",
                         "amount", String.valueOf(deenchantItem.getRemoveAmount()));
+                deenchantItem.doSuccessAction(player, deenchantItem.getRemoveAmount());
             });
             SchedulerUtil.runTaskLater(gui::openGUI, 1L);
             return;
         }
         int removed = deenchantItem.removeAutomatically(player, targetItem, deenchantItem.getRemoveAmount());
         if (removed > 0) {
-            LanguageManager.languageManager.sendStringText(player, "deenchant-success", "amount", String.valueOf(removed));
+            LanguageManager.languageManager.sendStringText(player, "deenchant-success",
+                    "amount", String.valueOf(removed));
+            deenchantItem.doSuccessAction(player, removed);
         }
-        else LanguageManager.languageManager.sendStringText(player, "deenchant-fail-no-enchantment");
+        else {
+            LanguageManager.languageManager.sendStringText(player, "deenchant-fail-no-enchantment");
+            deenchantItem.doFailAction(player);
+        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -184,23 +208,28 @@ public class ExtraSlotItemsListener implements Listener {
             return;
         }
         if (isCreative(player)) {
+            removeItem.doFailAction(player);
             return;
         }
         event.setCancelled(true);
         if (removeItem.hasReachedUseLimit(targetItem)) {
             sendUseLimitReached(player, removeItem.getUseCount(targetItem), removeItem.getUseLimit());
+            removeItem.doFailAction(player);
             return;
         }
         if (!removeItem.meetsConditions(player)) {
             LanguageManager.languageManager.sendStringText(player, "remove-slot-fail-condition");
+            removeItem.doFailAction(player);
             return;
         }
         if (!removeItem.matchesItem(targetItem)) {
             LanguageManager.languageManager.sendStringText(player, "remove-slot-fail-not-match");
+            removeItem.doFailAction(player);
             return;
         }
         if (!SlotUtil.hasBaseSlot(targetItem)) {
             LanguageManager.languageManager.sendStringText(player, "remove-slot-fail-no-slots");
+            removeItem.doFailAction(player);
             return;
         }
         int baseSlots = SlotUtil.getBaseSlot(targetItem);
@@ -211,15 +240,18 @@ public class ExtraSlotItemsListener implements Listener {
         if (removeItem.isLinkedExtraItem()) {
             if (!ConfigManager.configManager.getExtraSlotsItemMap().containsKey(removeItem.getLinkedExtraItemId())) {
                 LanguageManager.languageManager.sendStringText(player, "remove-slot-fail-linked-item-not-found");
+                removeItem.doFailAction(player);
                 return;
             }
             if (removeItem.isIllegalSlotCheckEnabled() && !ObjectExtraSlotsItem.isRecordedSlotAmountConsistent(targetItem)) {
                 LanguageManager.languageManager.sendStringText(player, "remove-slot-fail-illegal-data");
+                removeItem.doFailAction(player);
                 return;
             }
             requestedSlots = ObjectExtraSlotsItem.getNextRecordedSlots(targetItem, removeItem.getLinkedExtraItemId());
             if (requestedSlots <= 0 || currentSlots - requestedSlots < baseSlots) {
                 LanguageManager.languageManager.sendStringText(player, "remove-slot-fail-no-linked-use");
+                removeItem.doFailAction(player);
                 return;
             }
         } else {
@@ -227,12 +259,14 @@ public class ExtraSlotItemsListener implements Listener {
         }
         if (requestedSlots <= 0) {
             LanguageManager.languageManager.sendStringText(player, "remove-slot-fail-no-excess");
+            removeItem.doFailAction(player);
             return;
         }
         int newSlotLimit = Math.max(baseSlots, currentSlots - Math.min(requestedSlots, extraSlots));
         int removedSlots = currentSlots - newSlotLimit;
         if (removedSlots <= 0) {
             LanguageManager.languageManager.sendStringText(player, "remove-slot-fail-no-slots");
+            removeItem.doFailAction(player);
             return;
         }
         if (usedSlots > newSlotLimit) {
@@ -240,6 +274,9 @@ public class ExtraSlotItemsListener implements Listener {
                 RemoveSlotDeenchantGUI gui = new RemoveSlotDeenchantGUI(player, targetItem, newSlotLimit, () -> {
                     removeStack.setAmount(removeStack.getAmount() - 1);
                     finishRemoveSlots(player, targetItem, removeItem, newSlotLimit, removedSlots);
+                }, ignored -> {
+                    LanguageManager.languageManager.sendStringText(player, "remove-slot-fail-incomplete");
+                    removeItem.doFailAction(player);
                 });
                 SchedulerUtil.runTaskLater(gui::openGUI, 1L);
                 return;
@@ -247,6 +284,7 @@ public class ExtraSlotItemsListener implements Listener {
             List<Enchantment> plannedEnchantments = planRandomDeenchantments(targetItem, newSlotLimit);
             if (plannedEnchantments == null) {
                 LanguageManager.languageManager.sendStringText(player, "remove-slot-fail-not-enough-enchantments");
+                removeItem.doFailAction(player);
                 return;
             }
             removeStack.setAmount(removeStack.getAmount() - 1);
@@ -270,7 +308,9 @@ public class ExtraSlotItemsListener implements Listener {
         }
         if (consumedSlots <= 0) return;
         removeItem.recordUse(targetItem);
-        LanguageManager.languageManager.sendStringText(player, "remove-slot-success", "amount", String.valueOf(consumedSlots));
+        LanguageManager.languageManager.sendStringText(player, "remove-slot-success",
+                "amount", String.valueOf(consumedSlots));
+        removeItem.doSuccessAction(player, consumedSlots);
         if (removeItem.isLinkedExtraItem()) {
             if (reversedLinkedUse) {
                 ItemStack extraItem = ConfigManager.configManager.getExtraSlotItem(removeItem.getLinkedExtraItemId(), player);
