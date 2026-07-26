@@ -11,6 +11,7 @@ success-actions: []
 
 fail-actions: []
 
+chance: 100
 remove-type: LINKED_EXTRA
 linked-extra-slot-item: A
 illegal-slot-check: true

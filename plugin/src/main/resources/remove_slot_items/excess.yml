@@ -11,6 +11,7 @@ success-actions: []
 
 fail-actions: []
 
+chance: 100
 remove-type: EXCESS
 use-limit: -1
 return-extra-items:

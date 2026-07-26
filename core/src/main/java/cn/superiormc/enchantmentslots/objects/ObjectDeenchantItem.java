@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class ObjectDeenchantItem {
 
@@ -33,6 +34,10 @@ public class ObjectDeenchantItem {
     private final ConfigurationSection section;
 
     private final ConfigurationSection matchItem;
+
+    private final double chance;
+
+    private final double returnEnchantBookChance;
 
     private final int removeAmount;
 
@@ -56,6 +61,9 @@ public class ObjectDeenchantItem {
         this.id = id;
         this.section = section;
         this.matchItem = section.getConfigurationSection("match-item");
+        this.chance = Math.max(0, Math.min(100, section.getDouble("chance", 100)));
+        this.returnEnchantBookChance = Math.max(0, Math.min(100,
+                section.getDouble("return-enchant-book-chance", 100)));
         this.removeAmount = Math.max(1, section.getInt("remove-amount", 1));
         this.removeType = parseType(section.getString("remove-type", "RANDOM"));
         ConfigurationSection enchantSection = section.getConfigurationSection("remove-enchants");
@@ -105,6 +113,10 @@ public class ObjectDeenchantItem {
         return matchItem == null || MatchItemManager.matchItemManager.getMatch(matchItem, item);
     }
 
+    public boolean isSuccess() {
+        return rollChance(chance);
+    }
+
     public List<Enchantment> getEligibleEnchantments(ItemStack item) {
         List<Enchantment> result = new ArrayList<>();
         for (Enchantment enchantment : item.getEnchantments().keySet()) {
@@ -152,8 +164,14 @@ public class ObjectDeenchantItem {
         }
         meta.removeEnchant(enchantment);
         targetItem.setItemMeta(meta);
-        CommonUtil.giveOrDrop(player, ItemUtil.generateEnchantedBook(enchantment, level));
+        if (rollChance(returnEnchantBookChance)) {
+            CommonUtil.giveOrDrop(player, ItemUtil.generateEnchantedBook(enchantment, level));
+        }
         return true;
+    }
+
+    private boolean rollChance(double value) {
+        return value > ThreadLocalRandom.current().nextDouble(100);
     }
 
     public int removeAutomatically(Player player, ItemStack targetItem, int amount) {

@@ -8,7 +8,7 @@ This feature was added in plugin version **5.0.0**.
 
 All deenchant items are stored in the `deenchant_items` folder. The file name, without the `.yml` extension, is used as the item ID. For example, `common.yml` creates a deenchant item with the ID `common`.
 
-Players use a deenchant item by dragging it onto a target item in their inventory. Removed enchantments are returned to the player as enchanted books. This example randomly removes one enchantment:
+Players use a deenchant item by dragging it onto a target item in their inventory. Removed enchantments can be returned to the player as enchanted books. This example always removes one random enchantment and always returns its enchanted book:
 
 ```yaml
 display-item:
@@ -24,6 +24,8 @@ match-item:
 
 remove-type: RANDOM
 remove-amount: 1
+chance: 100
+return-enchant-book-chance: 100
 remove-enchants:
   whitelist:
     - '*'
@@ -54,10 +56,12 @@ fail-actions:
 * `match-item`: Determines which target items can use this deenchant item. Use [Match Item Format](../format/match-item-format.md). Remove this option to allow all items.
 * `remove-type`: Controls how enchantments are selected. Available values are `RANDOM`, `ORDER`, and `GUI`. Invalid values fall back to `RANDOM`.
 * `remove-amount`: The maximum number of enchantments removed by one use. The minimum and default value are both `1`.
+* `chance`: The success chance of the deenchant operation, from `0` to `100`. Defaults to `100`; values outside this range are clamped to the nearest limit. A failed roll consumes the deenchant item, does not count toward `use-limit`, removes no enchantment, and triggers `fail-actions` plus the `deenchant-fail-chance` language message.
+* `return-enchant-book-chance`: The chance of returning an enchanted book for each enchantment removed, from `0` to `100`. Defaults to `100`; values outside this range are clamped. Each removed enchantment rolls independently, and a failed book roll does not prevent the enchantment from being removed.
 * `remove-enchants`: Controls which enchantments are eligible and, for `ORDER`, their priority. Enchantment IDs may be written as `sharpness` or as a full namespaced ID such as `minecraft:sharpness`.
 * `success-actions`: The actions executed after one or more enchantments are removed. Use [Action Format](../format/action-format.md). The `{amount}` placeholder is the number of enchantments removed.
-* `fail-actions`: The actions executed when the item cannot remove an enchantment, including a failed condition or item match. Use [Action Format](../format/action-format.md). The `{amount}` placeholder is `0`.
-* `use-limits`: Maximum uses of this config ID on one target item. `-1` means unlimited.
+* `fail-actions`: The actions executed when the item cannot remove an enchantment, including a failed chance roll, condition, or item match. Use [Action Format](../format/action-format.md). The `{amount}` placeholder is `0`.
+* `use-limit`: Maximum successful chance rolls of this config ID on one target item. `-1` means unlimited. A failed `chance` roll does not count toward this limit.
 
 ## Remove Types
 

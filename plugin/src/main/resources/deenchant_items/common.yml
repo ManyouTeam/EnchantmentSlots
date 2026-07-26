@@ -12,11 +12,15 @@ success-actions: []
 
 fail-actions: []
 
+# Success chance (0-100). The item is consumed when the roll fails.
+chance: 100
+# Chance (0-100) to return a book for each enchantment removed.
+return-enchant-book-chance: 100
 # RANDOM, ORDER, or GUI
 remove-type: RANDOM
 # Number of enchantments removed when this item is used.
 remove-amount: 1
-# Maximum uses of this config ID on one target item. -1 means unlimited.
+# Maximum successful uses of this config ID on one target item. Failed chance rolls do not count. -1 means unlimited.
 use-limit: -1
 remove-enchants:
   # An empty whitelist means all enchantments. Use '*' to state that explicitly.

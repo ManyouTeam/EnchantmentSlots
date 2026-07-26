@@ -24,6 +24,7 @@ match-item:
 
 remove-type: FIXED
 remove-slots: 1
+chance: 100
 deenchant-item-mode: RANDOM
 use-limit: -1
 
@@ -56,15 +57,16 @@ fail-actions:
 * `match-item`: Determines which target items can use this remove slot item. Use [Match Item Format](../format/match-item-format.md). Remove this option, or use `match-item: []`, to allow all items.
 * `remove-type`: The slot removal mode. Available values are `FIXED`, `EXCESS`, and `LINKED_EXTRA`. Invalid values fall back to `FIXED`.
 * `remove-slots`: The number of slots removed in `FIXED` mode. The minimum and default value are both `1`. This option is ignored by the other modes.
-* `deenchant-item-mode`: Used only when reducing the limit would leave more used slots than the new limit. Support value: **RANOM** or **GUI**.
+* `chance`: The success chance of the slot removal operation, from `0` to `100`. Defaults to `100`; values outside this range are clamped to the nearest limit. A failed roll consumes one remove slot item, does not count toward `use-limit`, removes no slot or enchantment, and triggers `fail-actions` plus the `remove-slot-fail-chance` language message.
+* `deenchant-item-mode`: Used only when reducing the limit would leave more used slots than the new limit. Supported values: **RANDOM** or **GUI**.
   * `RANDOM` plans random enchantments first, then removes the planned set.&#x20;
   * `GUI` lets the player plan enchantments first. Closing that GUI before enough enchantments are selected cancels the operation: no enchantment and no remove slot item is consumed.
 * `return-extra-items`: Optionally converts removed slots into configured extra slot items. This option applies to `FIXED` and `EXCESS` only.
 * `linked-extra-slot-item`: The ID of the extra slot item reversed by `LINKED_EXTRA`. Do not include `.yml`.
 * `illegal-slot-check`: Used by `LINKED_EXTRA`. When `true` (the default), removal fails if the current slot limit does not match the original limit plus all tracked extra-slot contributions.
 * `success-actions`: The actions executed after slots are removed. Use Action Format. The `{amount}` placeholder is the number of slots actually removed.
-* `fail-actions`: The actions executed when slots cannot be removed, including a failed condition, item match, linked record check, or an incomplete GUI selection. Use Action Format. The `{amount}` placeholder is `0`.
-* `use-limits`: Maximum uses of this config ID on one target item. `-1` means unlimited.
+* `fail-actions`: The actions executed when slots cannot be removed, including a failed chance roll, condition, item match, linked record check, or an incomplete GUI selection. Use Action Format. The `{amount}` placeholder is `0`.
+* `use-limit`: Maximum successful uses of this config ID on one target item. `-1` means unlimited. A failed `chance` roll does not count toward this limit.
 
 The slot limit never drops below `1`. Consequently, the actual `{amount}` may be lower than `remove-slots`.
 

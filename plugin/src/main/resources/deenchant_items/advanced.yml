@@ -12,6 +12,8 @@ success-actions: []
 
 fail-actions: []
 
+chance: 100
+return-enchant-book-chance: 100
 remove-type: GUI
 remove-amount: 1
 use-limit: -1

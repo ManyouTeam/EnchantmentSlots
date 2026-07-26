@@ -49,7 +49,7 @@ match-item:
 * `success-actions`: The actions executed after slots are successfully added. Use [Action Format](../format/action-format.md). The `{amount}` placeholder is the configured `add-slots` value.
 * `fail-actions`: The actions executed when the chance roll fails. Use Action Format. The `{amount}` placeholder is `0`.
 * `match-item`: Determines which target items can use this extra slot item. Use [Match Item Format](../format/match-item-format.md). Remove this option, or use `match-item: []`, to allow all items.
-* `use-limits`: Maximum uses of this config ID on one target item. `-1` means unlimited.
+* `use-limit`: Maximum successful uses of this config ID on one target item. `-1` means unlimited. A failed `chance` roll consumes the extra slot item but does not count toward this limit.
 
 {% hint style="info" %}
 Extra slot items cannot be used in Creative mode. They also cannot increase an item beyond the maximum slot limit configured by the plugin.

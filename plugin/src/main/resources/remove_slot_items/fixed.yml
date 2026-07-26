@@ -11,9 +11,12 @@ success-actions: []
 
 fail-actions: []
 
+# Success chance (0-100). The item is consumed when the roll fails.
+chance: 100
 remove-type: FIXED
 remove-slots: 1
 deenchant-item-mode: RANDOM
+# Maximum successful uses of this config ID on one target item. Failed chance rolls do not count. -1 means unlimited.
 use-limit: -1
 
 return-extra-items:

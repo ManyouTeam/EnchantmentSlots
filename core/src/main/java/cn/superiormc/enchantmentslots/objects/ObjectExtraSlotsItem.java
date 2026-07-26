@@ -46,12 +46,7 @@ public class ObjectExtraSlotsItem {
 
     public ObjectExtraSlotsItem(String id, ConfigurationSection section) {
         this.id = id;
-        this.chance = section.getDouble("chance", 100);
-        if (chance > 100) {
-            chance = 100;
-        } else if (chance < 0) {
-            chance = 0;
-        }
+        this.chance = Math.max(0, Math.min(100, section.getDouble("chance", 100)));
         this.matchItem = section.getConfigurationSection("match-item");
         int[] addSlotRange = CommonUtil.parseAddSlotRange(section.getString("add-slots", "1"));
         this.minAddSlot = Math.max(1, addSlotRange[0]);
