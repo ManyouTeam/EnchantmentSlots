@@ -103,12 +103,12 @@ public class ExtraSlotItemsListener implements Listener {
                 item.doFailAction(player);
             } else {
                 extraItem.setAmount(extraItem.getAmount() - 1);
-                item.recordUse(targetItem);
                 if (value == 0) {
                     LanguageManager.languageManager.sendStringText(player, "extra-slot-fail-chance");
                     item.doFailAction(player);
                 } else {
                     int addedSlots = maxValue - currentSlots;
+                    item.recordUse(targetItem);
                     ObjectExtraSlotsItem.recordUsedSlots(targetItem, item.getId(), addedSlots);
                     LanguageManager.languageManager.sendStringText(player, "extra-slot-success",
                             "amount", String.valueOf(addedSlots));
@@ -118,11 +118,11 @@ public class ExtraSlotItemsListener implements Listener {
             return;
         }
         extraItem.setAmount(extraItem.getAmount() - 1);
-        item.recordUse(targetItem);
         if (value == 0) {
             LanguageManager.languageManager.sendStringText(player, "extra-slot-fail-chance");
             item.doFailAction(player);
         } else {
+            item.recordUse(targetItem);
             ObjectExtraSlotsItem.recordUsedSlots(targetItem, item.getId(), value);
             LanguageManager.languageManager.sendStringText(player, "extra-slot-success",
                     "amount", String.valueOf(value));
@@ -137,6 +137,9 @@ public class ExtraSlotItemsListener implements Listener {
         }
         Player player = (Player) event.getWhoClicked();
         ItemStack targetItem = event.getCurrentItem();
+        if (targetItem == null) {
+            return;
+        }
         ItemStack deenchantStack = event.getCursor();
         ObjectDeenchantItem deenchantItem = ConfigManager.configManager.getDeenchantItemValue(deenchantStack);
         if (deenchantItem == null) {
@@ -173,6 +176,11 @@ public class ExtraSlotItemsListener implements Listener {
             return;
         }
         deenchantStack.setAmount(0);
+        if (!deenchantItem.isSuccess()) {
+            LanguageManager.languageManager.sendStringText(player, "deenchant-fail-chance");
+            deenchantItem.doFailAction(player);
+            return;
+        }
         deenchantItem.recordUse(targetItem);
         if (deenchantItem.getRemoveType() == ObjectDeenchantItem.RemoveType.GUI) {
             DeenchantGUI gui = new DeenchantGUI(player, targetItem, deenchantItem, deenchantItem.getRemoveAmount(), () -> {
@@ -271,9 +279,12 @@ public class ExtraSlotItemsListener implements Listener {
         }
         if (usedSlots > newSlotLimit) {
             if (removeItem.getDeenchantItemMode() == ObjectRemoveSlotItem.DeenchantItemMode.GUI) {
+                if (failRemoveSlotChance(player, removeStack, removeItem)) {
+                    return;
+                }
                 RemoveSlotDeenchantGUI gui = new RemoveSlotDeenchantGUI(player, targetItem, newSlotLimit, () -> {
                     removeStack.setAmount(removeStack.getAmount() - 1);
-                    finishRemoveSlots(player, targetItem, removeItem, newSlotLimit, removedSlots);
+                    finishRemoveSlots(player, targetItem, removeItem, removedSlots);
                 }, ignored -> {
                     LanguageManager.languageManager.sendStringText(player, "remove-slot-fail-incomplete");
                     removeItem.doFailAction(player);
@@ -287,16 +298,32 @@ public class ExtraSlotItemsListener implements Listener {
                 removeItem.doFailAction(player);
                 return;
             }
+            if (failRemoveSlotChance(player, removeStack, removeItem)) {
+                return;
+            }
             removeStack.setAmount(removeStack.getAmount() - 1);
-            removeEnchantments(player, targetItem, plannedEnchantments);
-            finishRemoveSlots(player, targetItem, removeItem, newSlotLimit, removedSlots);
+            removeItem.removeEnchantments(player, targetItem, plannedEnchantments);
+            finishRemoveSlots(player, targetItem, removeItem, removedSlots);
+            return;
+        }
+        if (failRemoveSlotChance(player, removeStack, removeItem)) {
             return;
         }
         removeStack.setAmount(removeStack.getAmount() - 1);
-        finishRemoveSlots(player, targetItem, removeItem, newSlotLimit, removedSlots);
+        finishRemoveSlots(player, targetItem, removeItem, removedSlots);
     }
 
-    private void finishRemoveSlots(Player player, ItemStack targetItem, ObjectRemoveSlotItem removeItem, int newSlotLimit, int removedSlots) {
+    private boolean failRemoveSlotChance(Player player, ItemStack removeStack, ObjectRemoveSlotItem removeItem) {
+        if (removeItem.isSuccess()) {
+            return false;
+        }
+        removeStack.setAmount(removeStack.getAmount() - 1);
+        LanguageManager.languageManager.sendStringText(player, "remove-slot-fail-chance");
+        removeItem.doFailAction(player);
+        return true;
+    }
+
+    private void finishRemoveSlots(Player player, ItemStack targetItem, ObjectRemoveSlotItem removeItem, int removedSlots) {
         int consumedSlots;
         boolean reversedLinkedUse = false;
         if (removeItem.isLinkedExtraItem()) {
@@ -344,23 +371,6 @@ public class ExtraSlotItemsListener implements Listener {
         return remainingSlots <= slotLimit ? planned : null;
     }
 
-    private void removeEnchantments(Player player, ItemStack targetItem, List<Enchantment> enchantments) {
-        org.bukkit.inventory.meta.ItemMeta meta = targetItem.getItemMeta();
-        if (meta == null) return;
-        List<ItemStack> returnedBooks = new ArrayList<>();
-        for (Enchantment enchantment : enchantments) {
-            Integer level = meta.getEnchants().get(enchantment);
-            if (level == null) {
-                continue;
-            }
-            meta.removeEnchant(enchantment);
-            returnedBooks.add(ItemUtil.generateEnchantedBook(enchantment, level));
-        }
-        targetItem.setItemMeta(meta);
-        for (ItemStack book : returnedBooks) {
-            cn.superiormc.enchantmentslots.utils.CommonUtil.giveOrDrop(player, book);
-        }
-    }
 
     private boolean isApplicableClick(InventoryClickEvent event) {
         if (!(event.getClickedInventory() instanceof PlayerInventory)) {

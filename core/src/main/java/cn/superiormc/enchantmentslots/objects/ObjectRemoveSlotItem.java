@@ -2,17 +2,18 @@ package cn.superiormc.enchantmentslots.objects;
 
 import cn.superiormc.enchantmentslots.EnchantmentSlots;
 import cn.superiormc.enchantmentslots.managers.MatchItemManager;
+import cn.superiormc.enchantmentslots.utils.CommonUtil;
 import cn.superiormc.enchantmentslots.utils.ItemUtil;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.LinkedHashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class ObjectRemoveSlotItem {
 
@@ -34,6 +35,8 @@ public class ObjectRemoveSlotItem {
     private final ConfigurationSection section;
 
     private final ConfigurationSection matchItem;
+
+    private final double chance;
 
     private final RemoveType removeType;
 
@@ -61,6 +64,7 @@ public class ObjectRemoveSlotItem {
         this.id = id;
         this.section = section;
         this.matchItem = section.getConfigurationSection("match-item");
+        this.chance = Math.max(0, Math.min(100, section.getDouble("chance", 100)));
         this.removeType = parseType(section.getString("remove-type", "FIXED"));
         this.removeSlots = Math.max(1, section.getInt("remove-slots", 1));
         this.deenchantItemMode = parseDeenchantItemMode(section.getString("deenchant-item-mode", "RANDOM"));
@@ -126,6 +130,10 @@ public class ObjectRemoveSlotItem {
         return matchItem == null || MatchItemManager.matchItemManager.getMatch(matchItem, item);
     }
 
+    public boolean isSuccess() {
+        return chance > ThreadLocalRandom.current().nextDouble(100);
+    }
+
     public int getSlotsToRemove(int currentSlots, int usedSlots) {
         if (removeType == RemoveType.EXCESS) {
             return Math.max(0, currentSlots - usedSlots);
@@ -183,5 +191,25 @@ public class ObjectRemoveSlotItem {
 
     public int getUseCount(ItemStack targetItem) {
         return useLimit.getUseCount(targetItem);
+    }
+
+    public void removeEnchantments(Player player, ItemStack targetItem, List<Enchantment> enchantments) {
+        ItemMeta meta = targetItem.getItemMeta();
+        if (meta == null) {
+            return;
+        }
+        List<ItemStack> returnedBooks = new ArrayList<>();
+        for (Enchantment enchantment : enchantments) {
+            Integer level = meta.getEnchants().get(enchantment);
+            if (level == null) {
+                continue;
+            }
+            meta.removeEnchant(enchantment);
+            returnedBooks.add(ItemUtil.generateEnchantedBook(enchantment, level));
+        }
+        targetItem.setItemMeta(meta);
+        for (ItemStack book : returnedBooks) {
+            CommonUtil.giveOrDrop(player, book);
+        }
     }
 }
