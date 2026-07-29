@@ -29,3 +29,7 @@ commands:
       - "es"
     usage: "/enchantmentslots"
     description: "EnchantmentSlots Main Command."
+permissions:
+  enchantmentslots.displaydescription:
+    description: "Allows a player to display enchantment descriptions when permission is required."
+    default: false

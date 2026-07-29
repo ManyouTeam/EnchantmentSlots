@@ -1,10 +1,14 @@
 plugin-reloaded: "&#98FB98[EnchantmentSlots] &f插件已重启!"
+description-display-enabled: "&#98FB98[EnchantmentSlots] &a已开启附魔描述显示。"
+description-display-disabled: "&#98FB98[EnchantmentSlots] &7已关闭附魔描述显示。"
 help-main: |
   &#98FB98&lEnchantmentSlots &7Made by @PQguanfang
   &f/es help &7- 查看帮助.
+  &f/es toggledescription &7- 切换是否显示附魔描述.
 help-main-admin: |
   &#98FB98&lEnchantmentSlots &7Made by @PQguanfang
   &f/es help &7- 查看帮助.
+  &f/es toggledescription &7- 切换是否显示附魔描述.
   &f/es reload &7- 重启插件.
   &f/es setslots <数量> &7- 将手上物品的附魔槽位设置指定值.
   &f/es giveslots <数量> &7- 添加手上物品的附魔槽位.
@@ -123,6 +127,7 @@ override-lang:
     breach: '破甲'
     density: '致密'
     lunge: '突进'
+    swift_sneak: '迅捷潜行'
 
   enchant-used-slot:
     placeholder:

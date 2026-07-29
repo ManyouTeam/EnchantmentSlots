@@ -2,6 +2,7 @@ package cn.superiormc.enchantmentslots.listeners;
 
 import cn.superiormc.enchantmentslots.managers.ConfigManager;
 import cn.superiormc.enchantmentslots.managers.ListenerManager;
+import cn.superiormc.enchantmentslots.methods.EnchantDescriptionDisplay;
 import cn.superiormc.enchantmentslots.utils.SchedulerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -20,6 +21,7 @@ public class PlayerCacheListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+        EnchantDescriptionDisplay.load(event.getPlayer());
         long time = ConfigManager.configManager.getLong("settings.set-slot-trigger.SetSlotPacket.remove-illegal-excess-enchant.ignore-join-time", -1);
         if (time < 0) {
             loadedPlayers.add(event.getPlayer().getUniqueId());
@@ -37,10 +39,12 @@ public class PlayerCacheListener implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         ListenerManager.listenerManager.unregisterListeners(event.getPlayer());
+        EnchantDescriptionDisplay.unload(event.getPlayer());
         loadedPlayers.remove(event.getPlayer().getUniqueId());
     }
 
     public static void clearCaches() {
         loadedPlayers.clear();
+        EnchantDescriptionDisplay.clearCache();
     }
 }

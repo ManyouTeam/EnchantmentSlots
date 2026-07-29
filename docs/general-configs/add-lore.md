@@ -56,3 +56,30 @@ You can set content of **Add Lore** at `config.yml` file. For available placehol
 enchantment slot data. It is separate from `display-value`, so these items can
 show their enchantments and enchantment descriptions without showing slot
 amounts or empty slots.
+
+## Enchantment description controls
+
+When enchantment descriptions are enabled, players can control whether they see
+them with the following options:
+
+```yaml
+settings:
+  add-lore:
+    placeholder:
+      enchants:
+        description:
+          enabled: true
+          shift-click-ground-toggle: true
+          require-permission: false
+```
+
+With `shift-click-ground-toggle` enabled, a player can sneak and right-click a
+block while holding an item to toggle enchantment descriptions. The choice is
+saved on the player and persists across reconnects. Enchantment names and slot
+information remain visible.
+
+Players can also use `/es toggledescription` to switch the same setting. This
+command works even when `shift-click-ground-toggle` is disabled.
+
+With `require-permission` enabled, only players with
+`enchantmentslots.displaydescription` can display or toggle descriptions.

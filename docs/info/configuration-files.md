@@ -133,6 +133,10 @@ settings:
           # Requires supported third-party enchantment plugin, such as EcoEnchants.
           # Disabled by default. If no supported plugin is installed, this feature does nothing.
           enabled: false
+          # Allow players to sneak and right-click a block while holding an item to toggle descriptions.
+          shift-click-ground-toggle: true
+          # Whether players need enchantmentslots.displaydescription to display descriptions.
+          require-permission: false
           format: '&7    {enchant_description}'
       empty-slots:
         format: '{lang}'

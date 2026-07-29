@@ -30,6 +30,7 @@ public class CommandManager {
         registerNewSubCommand(new SubGiveDeenchanterItem());
         registerNewSubCommand(new SubGiveRemoveSlotItem());
         registerNewSubCommand(new SubSetSlots());
+        registerNewSubCommand(new SubToggleDescription());
         registerNewSubCommand(new SubReload());
         if (ConfigManager.configManager.getBoolean("enchant-gui.enabled", true)) {
             registerNewSubCommand(new SubOpenEnchantGUI());

@@ -3,6 +3,7 @@ package cn.superiormc.enchantmentslots.managers;
 import cn.superiormc.enchantmentslots.EnchantmentSlots;
 import cn.superiormc.enchantmentslots.listeners.*;
 import cn.superiormc.enchantmentslots.methods.AddLore;
+import cn.superiormc.enchantmentslots.methods.EnchantDescriptionDisplay;
 import cn.superiormc.enchantmentslots.protolcol.eco.EcoDisplayModule;
 import cn.superiormc.enchantmentslots.protolcol.packetevents.*;
 import cn.superiormc.enchantmentslots.utils.CommonUtil;
@@ -32,6 +33,7 @@ public class ListenerManager {
     }
 
     private void registerListeners() {
+        Bukkit.getOnlinePlayers().forEach(EnchantDescriptionDisplay::load);
         Bukkit.getPluginManager().registerEvents(new GUIListener(), EnchantmentSlots.instance);
         Bukkit.getPluginManager().registerEvents(new PlayerCacheListener(), EnchantmentSlots.instance);
         Bukkit.getPluginManager().registerEvents(new PlayerEnchantListener(), EnchantmentSlots.instance);
@@ -40,6 +42,7 @@ public class ListenerManager {
             Bukkit.getPluginManager().registerEvents(new PlayerClickListener(), EnchantmentSlots.instance);
         }
         Bukkit.getPluginManager().registerEvents(new ExtraSlotItemsListener(), EnchantmentSlots.instance);
+        Bukkit.getPluginManager().registerEvents(new EnchantDescriptionToggleListener(), EnchantmentSlots.instance);
         if (CommonUtil.getMajorVersion(16)) {
             Bukkit.getPluginManager().registerEvents(new PlayerSmithListener(), EnchantmentSlots.instance);
         }

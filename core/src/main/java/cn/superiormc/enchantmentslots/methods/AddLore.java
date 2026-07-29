@@ -213,6 +213,9 @@ public class AddLore {
         if (!ConfigManager.configManager.getBoolean("settings.add-lore.placeholder.enchants.description.enabled", false)) {
             return result;
         }
+        if (!EnchantDescriptionDisplay.canDisplay(player)) {
+            return result;
+        }
         for (String line : HookManager.hookManager.getEnchantDescription(item, enchantment, player)) {
             if (line == null || line.isEmpty()) {
                 continue;

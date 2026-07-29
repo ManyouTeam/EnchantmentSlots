@@ -1,10 +1,14 @@
 plugin-reloaded: "&#98FB98[EnchantmentSlots] &fPlugin reloaded!"
+description-display-enabled: "&#98FB98[EnchantmentSlots] &aEnchantment descriptions enabled."
+description-display-disabled: "&#98FB98[EnchantmentSlots] &7Enchantment descriptions disabled."
 help-main: |
   &#98FB98&lEnchantmentSlots &7Made by @PQguanfang
   &f/es help &7- View help.
+  &f/es toggledescription &7- Toggle enchantment descriptions.
 help-main-admin: |
   &#98FB98&lEnchantmentSlots &7Made by @PQguanfang
   &f/es help &7- View help.
+  &f/es toggledescription &7- Toggle enchantment descriptions.
   &f/es reload &7- Reload the plugin.
   &f/es setslots <amount> &7- Set enchantment slot to specified amount.
   &f/es giveslots <amount> &7- Add enchantment slots specified amount.
@@ -124,6 +128,7 @@ override-lang:
     breach: 'Breach'
     density: 'Density'
     lunge: 'Lunge'
+    swift_sneak: 'Swift Sneak'
 
   enchant-used-slot:
     placeholder:
