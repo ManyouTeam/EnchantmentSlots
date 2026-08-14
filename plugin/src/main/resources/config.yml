@@ -125,7 +125,7 @@ settings:
         level-hide-one: true
         description:
           # Requires supported third-party enchantment plugin, such as EcoEnchants.
-          # Disabled by default. If no supported plugin is installed, this feature does nothing.
+          # If no supported plugin is installed, this feature does nothing.
           enabled: true
           # Allow players to sneak and right-click a block while holding an item to toggle descriptions.
           shift-click-ground-toggle: true

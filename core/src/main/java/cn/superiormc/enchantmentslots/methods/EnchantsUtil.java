@@ -76,18 +76,27 @@ public class EnchantsUtil {
         }
     }
 
-    public static String getEnchantmentLevel(Enchantment enchantment, int level, Player player) {
+    public static int getEnchantmentLevel(ItemStack item, Enchantment enchantment) {
+        int level = item.getEnchantmentLevel(enchantment);
+        ItemMeta meta = item.getItemMeta();
+        if (level <= 0 && meta instanceof EnchantmentStorageMeta storageMeta) {
+            level = storageMeta.getStoredEnchantLevel(enchantment);
+        }
+        return Math.max(level, 1);
+    }
+
+    public static String getEnchantmentLevelPlaceholder(Enchantment enchantment, int level, Player player) {
         if (ConfigManager.configManager.getBoolean("settings.add-lore.placeholder.enchants.level-hide-one", false) && level == enchantment.getMaxLevel() && enchantment.getMaxLevel() == 1) {
             return "";
         }
-        String result = getEnchantLevel(level, player);
+        String result = getEnchantmentLevelPlaceholder(level, player);
         if (ConfigManager.configManager.getBoolean("settings.add-lore.placeholder.enchants.auto-add-space", true) && !result.isEmpty()) {
             return " " + result;
         }
         return result;
     }
 
-    public static String getEnchantmentLevelRoman(Enchantment enchantment, int level) {
+    public static String getEnchantmentLevelRomanPlaceholder(Enchantment enchantment, int level) {
         if (ConfigManager.configManager.getBoolean("settings.add-lore.placeholder.enchants.level-hide-one", false) && level == enchantment.getMaxLevel() && enchantment.getMaxLevel() == 1) {
             return "";
         }
@@ -98,7 +107,7 @@ public class EnchantsUtil {
         return result;
     }
 
-    public static String getEnchantLevel(int level, Player player) {
+    public static String getEnchantmentLevelPlaceholder(int level, Player player) {
         if (!enchantmentLevelCache.containsKey(player.getLocale())) {
             enchantmentLevelCache.put(player.getLocale(), new HashMap<>());
         }

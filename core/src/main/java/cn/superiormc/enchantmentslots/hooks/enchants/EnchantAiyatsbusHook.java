@@ -6,6 +6,7 @@ import cc.polarastrum.aiyatsbus.core.AiyatsbusUtilsKt;
 import cc.polarastrum.aiyatsbus.core.data.Displayer;
 import cc.polarastrum.aiyatsbus.core.util.StringsKt;
 import cc.polarastrum.aiyatsbus.core.util.VariablesKt;
+import cn.superiormc.enchantmentslots.methods.EnchantsUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -48,7 +49,7 @@ public class EnchantAiyatsbusHook extends AbstractEnchantHook {
             return null;
         }
         Displayer displayer = aiyatsbusEnchantment.getDisplayer();
-        Map<String, String> tmp = displayer.holders(item.getEnchantmentLevel(enchantment), player, item);
+        Map<String, String> tmp = displayer.holders(EnchantsUtil.getEnchantmentLevel(item, enchantment), player, item);
         return Arrays.asList(tmp.get("description").split("\n"));
     }
 

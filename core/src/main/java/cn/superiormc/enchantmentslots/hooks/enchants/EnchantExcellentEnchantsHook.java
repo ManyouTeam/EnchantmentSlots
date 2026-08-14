@@ -1,5 +1,6 @@
 package cn.superiormc.enchantmentslots.hooks.enchants;
 
+import cn.superiormc.enchantmentslots.methods.EnchantsUtil;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -41,7 +42,7 @@ public class EnchantExcellentEnchantsHook extends AbstractEnchantHook {
     public List<String> getEnchantDescription(ItemStack item, Enchantment enchantment, Player player) {
         CustomEnchantment excellentEnchant = EnchantRegistry.getByKey(enchantment.getKey());
         if (excellentEnchant != null) {
-            return NightMessage.asLegacy(excellentEnchant.getDescription(item.getEnchantmentLevel(enchantment)));
+            return NightMessage.asLegacy(excellentEnchant.getDescription(EnchantsUtil.getEnchantmentLevel(item, enchantment)));
         }
         return null;
     }

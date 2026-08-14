@@ -23,6 +23,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -109,7 +110,7 @@ public class HookManager {
     }
 
     private void initEnchantHook() {
-        enchantHooks = new HashMap<>();
+        enchantHooks = new LinkedHashMap<>();
         if (CommonUtil.checkPluginLoad("EcoEnchants")) {
             registerNewEnchantHook("EcoEnchants", new EnchantEcoEnchantsHook());
         }
@@ -219,13 +220,14 @@ public class HookManager {
     }
 
     public Map<Enchantment, Integer> sortEnchantments(ItemMeta meta) {
-        if (enchantHooks.values().isEmpty()) {
-            return EnchantsUtil.getEnchantments(meta, false);
-        }
-        Map<Enchantment, Integer> enchantments = new HashMap<>();
+        Map<Enchantment, Integer> enchantments = new LinkedHashMap<>();
         for (AbstractEnchantHook enchantHook : enchantHooks.values()) {
-            enchantments = enchantHook.sortEnchants(meta);
+            Map<Enchantment, Integer> sortedEnchantments = enchantHook.sortEnchants(meta);
+            if (sortedEnchantments != null) {
+                sortedEnchantments.forEach(enchantments::putIfAbsent);
+            }
         }
+        EnchantsUtil.getEnchantments(meta, false).forEach(enchantments::putIfAbsent);
         return enchantments;
     }
 }

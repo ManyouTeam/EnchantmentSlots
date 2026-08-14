@@ -185,8 +185,8 @@ public class AddLore {
                 "&6  {enchant_name}",
                 "enchant_name", HookManager.hookManager.getEnchantName(item, enchantment, player, true),
                 "enchant_raw_name", HookManager.hookManager.getEnchantName(item, enchantment, player, false),
-                "enchant_level", EnchantsUtil.getEnchantmentLevel(enchantment, level, player),
-                "enchant_level_roman", EnchantsUtil.getEnchantmentLevelRoman(enchantment, level),
+                "enchant_level", EnchantsUtil.getEnchantmentLevelPlaceholder(enchantment, level, player),
+                "enchant_level_roman", EnchantsUtil.getEnchantmentLevelRomanPlaceholder(enchantment, level),
                 "enchant_used_slot", EnchantsUtil.getUsedSlotPlaceholder(enchantment, player),
                 "enchant_description", firstDescription);
         result.add(prefix + value);
@@ -195,14 +195,16 @@ public class AddLore {
             String descriptionFormat = ConfigManager.configManager.getString(player,
                     descriptionPath,
                     "&7    {enchant_description}");
-            for (String line : description) {
-                result.add(prefix + CommonUtil.modifyString(player, descriptionFormat,
-                        "enchant_description", line,
-                        "enchant_name", HookManager.hookManager.getEnchantName(item, enchantment, player, true),
-                        "enchant_raw_name", HookManager.hookManager.getEnchantName(item, enchantment, player, false),
-                        "enchant_level", EnchantsUtil.getEnchantmentLevel(enchantment, level, player),
-                        "enchant_level_roman", EnchantsUtil.getEnchantmentLevelRoman(enchantment, level),
-                        "enchant_used_slot", EnchantsUtil.getUsedSlotPlaceholder(enchantment, player)));
+            if (!descriptionFormat.isEmpty()) {
+                for (String line : description) {
+                    result.add(prefix + CommonUtil.modifyString(player, descriptionFormat,
+                            "enchant_description", line,
+                            "enchant_name", HookManager.hookManager.getEnchantName(item, enchantment, player, true),
+                            "enchant_raw_name", HookManager.hookManager.getEnchantName(item, enchantment, player, false),
+                            "enchant_level", EnchantsUtil.getEnchantmentLevelPlaceholder(enchantment, level, player),
+                            "enchant_level_roman", EnchantsUtil.getEnchantmentLevelRomanPlaceholder(enchantment, level),
+                            "enchant_used_slot", EnchantsUtil.getUsedSlotPlaceholder(enchantment, player)));
+                }
             }
         }
         return result;

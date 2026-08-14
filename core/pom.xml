@@ -58,9 +58,9 @@
         <dependency>
             <groupId>su.nightexpress</groupId>
             <artifactId>ExcellentEnchant</artifactId>
-            <version>5.4.1</version>
+            <version>5.4.3</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/ExcellentEnchants-5.4.1.jar</systemPath>
+            <systemPath>${project.basedir}/lib/ExcellentEnchants-5.4.3.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>net.Indyuce</groupId>

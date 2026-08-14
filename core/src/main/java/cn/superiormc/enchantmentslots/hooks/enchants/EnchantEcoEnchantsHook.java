@@ -1,5 +1,6 @@
 package cn.superiormc.enchantmentslots.hooks.enchants;
 
+import cn.superiormc.enchantmentslots.methods.EnchantsUtil;
 import com.willfp.eco.util.StringUtils;
 import com.willfp.ecoenchants.display.EnchantSorter;
 import com.willfp.ecoenchants.display.EnchantmentFormattingKt;
@@ -48,7 +49,7 @@ public class EnchantEcoEnchantsHook extends AbstractEnchantHook {
         if (ecoEnchant == null) {
             return Collections.emptyList();
         }
-        return EnchantmentFormattingKt.getFormattedDescription(ecoEnchant, item.getEnchantmentLevel(enchantment), player);
+        return EnchantmentFormattingKt.getFormattedDescription(ecoEnchant, EnchantsUtil.getEnchantmentLevel(item, enchantment), player);
     }
 
     @Override
