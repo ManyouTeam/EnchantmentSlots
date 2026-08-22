@@ -53,7 +53,7 @@ public class EnchantGUI extends InvGUI {
             if (item == null || item.getType().isAir()) {
                 return true;
             }
-            return ConfigManager.configManager.getDefaultLimits(item, player) > 0;
+            return ConfigManager.configManager.getDefaultLimits(item, player) == 0;
         } else if (slot == ConfigManager.configManager.getInt("enchant-gui.book-slot", 15)) {
             ItemStack enchantBookItem = inv.getItem(ConfigManager.configManager.getInt("enchant-gui.book-slot", 15));
             if (enchantBookItem != null && !enchantBookItem.getType().isAir()) {

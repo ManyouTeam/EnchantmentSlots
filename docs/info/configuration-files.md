@@ -131,10 +131,12 @@ settings:
         level-hide-one: true
         description:
           # Requires supported third-party enchantment plugin, such as EcoEnchants.
-          # Disabled by default. If no supported plugin is installed, this feature does nothing.
-          enabled: false
+          # If no supported plugin is installed, this feature does nothing.
+          enabled: true
           # Allow players to sneak and right-click a block while holding an item to toggle descriptions.
           shift-click-ground-toggle: true
+          # Allow players to use /es toggledescription. The command is only registered when this and enabled are true.
+          command-toggle: true
           # Whether players need enchantmentslots.displaydescription to display descriptions.
           require-permission: false
           format: '&7    {enchant_description}'

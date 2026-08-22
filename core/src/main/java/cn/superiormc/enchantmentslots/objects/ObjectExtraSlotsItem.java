@@ -109,7 +109,9 @@ public class ObjectExtraSlotsItem {
 
     public static void recordUsedSlots(ItemStack targetItem, String extraItemId, int slots) {
         if (slots <= 0 || extraItemId == null || extraItemId.isEmpty()
-                || targetItem == null || !SlotUtil.hasBaseSlot(targetItem)) return;
+                || targetItem == null || !SlotUtil.hasBaseSlot(targetItem)) {
+            return;
+        }
         List<UsedSlots> usedSlots = getUsedSlots(targetItem.getItemMeta());
         if (usedSlots == null) usedSlots = new ArrayList<>();
         usedSlots.add(new UsedSlots(extraItemId, slots));
@@ -117,12 +119,18 @@ public class ObjectExtraSlotsItem {
     }
 
     public static int getNextRecordedSlots(ItemStack targetItem, String extraItemId) {
-        if (targetItem == null || !targetItem.hasItemMeta()) return 0;
+        if (targetItem == null || !targetItem.hasItemMeta()) {
+            return 0;
+        }
         List<UsedSlots> usedSlots = getUsedSlots(targetItem.getItemMeta());
-        if (usedSlots == null) return 0;
+        if (usedSlots == null) {
+            return 0;
+        }
         for (int i = usedSlots.size() - 1; i >= 0; i--) {
             UsedSlots used = usedSlots.get(i);
-            if (used.itemId.equals(extraItemId)) return used.slots;
+            if (used.itemId.equals(extraItemId)) {
+                return used.slots;
+            }
         }
         return 0;
     }
@@ -130,7 +138,9 @@ public class ObjectExtraSlotsItem {
     public static boolean consumeLatestRecordedSlots(ItemStack targetItem, String extraItemId, int slots) {
         if (slots <= 0 || targetItem == null || !targetItem.hasItemMeta()) return false;
         List<UsedSlots> usedSlots = getUsedSlots(targetItem.getItemMeta());
-        if (usedSlots == null) return false;
+        if (usedSlots == null) {
+            return false;
+        }
         int index = -1;
         for (int i = usedSlots.size() - 1; i >= 0; i--) {
             if (usedSlots.get(i).itemId.equals(extraItemId)) {
@@ -138,9 +148,13 @@ public class ObjectExtraSlotsItem {
                 break;
             }
         }
-        if (index < 0) return false;
+        if (index < 0) {
+            return false;
+        }
         UsedSlots used = usedSlots.get(index);
-        if (used.slots != slots) return false;
+        if (used.slots != slots) {
+            return false;
+        }
         usedSlots.remove(index);
         saveUsedSlots(targetItem, usedSlots);
         return true;
@@ -177,7 +191,9 @@ public class ObjectExtraSlotsItem {
 
     public static int getExtraSlots(ItemMeta meta) {
         List<UsedSlots> usedSlots = getUsedSlots(meta);
-        if (usedSlots == null) return 0;
+        if (usedSlots == null) {
+            return 0;
+        }
         long total = 0;
         for (UsedSlots used : usedSlots) {
             total += used.slots;
@@ -186,9 +202,13 @@ public class ObjectExtraSlotsItem {
     }
 
     public static boolean isRecordedSlotAmountConsistent(ItemStack targetItem) {
-        if (!SlotUtil.hasBaseSlot(targetItem)) return false;
+        if (!SlotUtil.hasBaseSlot(targetItem)) {
+            return false;
+        }
         List<UsedSlots> usedSlots = getUsedSlots(targetItem.getItemMeta());
-        if (usedSlots == null) return false;
+        if (usedSlots == null) {
+            return false;
+        }
         long trackedSlots = 0;
         for (UsedSlots used : usedSlots) trackedSlots += used.slots;
         return trackedSlots <= Integer.MAX_VALUE;
@@ -216,7 +236,9 @@ public class ObjectExtraSlotsItem {
 
     private static void saveUsedSlots(ItemStack targetItem, List<UsedSlots> usedSlots) {
         ItemMeta meta = targetItem.getItemMeta();
-        if (meta == null) return;
+        if (meta == null) {
+            return;
+        }
         if (usedSlots.isEmpty()) {
             meta.getPersistentDataContainer().remove(USED_EXTRA_SLOTS);
         } else {

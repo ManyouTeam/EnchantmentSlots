@@ -16,7 +16,7 @@ public class CommandManager {
     public CommandManager(){
         commandManager = this;
         registerBukkitCommands();
-        registerObjectCommand();
+        reloadSubCommands();
     }
 
     private void registerBukkitCommands(){
@@ -30,11 +30,21 @@ public class CommandManager {
         registerNewSubCommand(new SubGiveDeenchanterItem());
         registerNewSubCommand(new SubGiveRemoveSlotItem());
         registerNewSubCommand(new SubSetSlots());
-        registerNewSubCommand(new SubToggleDescription());
+        if (ConfigManager.configManager.getBoolean(
+                "settings.add-lore.placeholder.enchants.description.enabled", false)
+                && ConfigManager.configManager.getBoolean(
+                "settings.add-lore.placeholder.enchants.description.command-toggle", false)) {
+            registerNewSubCommand(new SubToggleDescription());
+        }
         registerNewSubCommand(new SubReload());
         if (ConfigManager.configManager.getBoolean("enchant-gui.enabled", true)) {
             registerNewSubCommand(new SubOpenEnchantGUI());
         }
+    }
+
+    public void reloadSubCommands() {
+        registeredCommands.clear();
+        registerObjectCommand();
     }
 
     public Map<String, AbstractCommand> getSubCommandsMap() {

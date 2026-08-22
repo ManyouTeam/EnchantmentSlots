@@ -70,6 +70,7 @@ settings:
         description:
           enabled: true
           shift-click-ground-toggle: true
+          command-toggle: true
           require-permission: false
 ```
 
@@ -78,8 +79,10 @@ block while holding an item to toggle enchantment descriptions. The choice is
 saved on the player and persists across reconnects. Enchantment names and slot
 information remain visible.
 
-Players can also use `/es toggledescription` to switch the same setting. This
-command works even when `shift-click-ground-toggle` is disabled.
+With both `enabled` and `command-toggle` enabled, players can also use
+`/es toggledescription` to switch the same setting. The command is not
+registered unless both options are enabled, but it can still be used when
+`shift-click-ground-toggle` is disabled.
 
 With `require-permission` enabled, only players with
 `enchantmentslots.displaydescription` can display or toggle descriptions.

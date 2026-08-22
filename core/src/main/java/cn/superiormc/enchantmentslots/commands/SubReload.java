@@ -1,6 +1,7 @@
 package cn.superiormc.enchantmentslots.commands;
 
 import cn.superiormc.enchantmentslots.EnchantmentSlots;
+import cn.superiormc.enchantmentslots.managers.CommandManager;
 import cn.superiormc.enchantmentslots.managers.ConfigManager;
 import cn.superiormc.enchantmentslots.managers.LanguageManager;
 import org.bukkit.entity.Player;
@@ -19,6 +20,7 @@ public class SubReload extends AbstractCommand {
         EnchantmentSlots.instance.reloadConfig();
         new LanguageManager();
         new ConfigManager();
+        CommandManager.commandManager.reloadSubCommands();
         LanguageManager.languageManager.sendStringText(player, "plugin-reloaded");
     }
 
@@ -27,6 +29,7 @@ public class SubReload extends AbstractCommand {
         EnchantmentSlots.instance.reloadConfig();
         new LanguageManager();
         new ConfigManager();
+        CommandManager.commandManager.reloadSubCommands();
         LanguageManager.languageManager.sendStringText("plugin-reloaded");
     }
 

@@ -129,6 +129,8 @@ settings:
           enabled: true
           # Allow players to sneak and right-click a block while holding an item to toggle descriptions.
           shift-click-ground-toggle: true
+          # Allow players to use /es toggledescription. Only registered when this and enabled are true.
+          command-toggle: true
           # Whether players need enchantmentslots.displaydescription to display descriptions.
           require-permission: false
           format: '&7    {enchant_description}'
