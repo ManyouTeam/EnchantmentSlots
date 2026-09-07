@@ -58,6 +58,8 @@ You can set content of **Add Lore** at `config.yml` file. For available placehol
 
 {% hint style="info" %}
 This feature provides continued support only for the EnchantmentReform plugin; support for other enchantment plugins will no longer be provided.
+
+(This simply means we will no longer provide further updates or fixes, though existing features and code remain unaffected; the feature may still support [compatible enchantment plugins](../info/compatibility.md).)
 {% endhint %}
 
 When enchantment descriptions are enabled, players can control whether they see them with the following options:
