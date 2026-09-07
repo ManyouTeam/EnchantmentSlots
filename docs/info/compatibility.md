@@ -9,6 +9,7 @@ EnchantmentSlot can automatically obtain information such as the **name, sort** 
 * EcoEnchants
 * ExcellentEnchants&#x20;
 * Aiyatsbus
+* EnchantmentReform
 
 ### <mark style="color:red;">Directly</mark> supported custom items plugins list
 

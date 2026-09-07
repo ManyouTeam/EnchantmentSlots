@@ -6,7 +6,7 @@ EnchantmentSlot supports adding information about enchanting slots to the lore o
 
 You shoud note that only items been set slot will have enchantment slot lore added to them. There are 2 ways to set item enchantment slot.
 
-* Item Slot Settings: This feature allows you to set the number of default slots and max slots for matching items. If the item matches, it will be automatically added to the enchantment slot. Please note that this process is not instantaneous and requires interaction between the player and the item. In most case, when player obtaining the item in survival mode will be automatically detected.&#x20;
+* Item Slot Settings: This feature allows you to set the number of default slots and max slots for matching items. If the item matches, it will be automatically added to the enchantment slot. Please note that this process is not instantaneous and requires interaction between the player and the item. In most case, when player obtaining the item in survival mode will be automatically detected.
 * Commands: You can use `/es setslots` or `/es giveslots` command to set your hold item's enchantment slot data.
 
 ## Black Item
@@ -52,15 +52,15 @@ You can set content of **Add Lore** at `config.yml` file. For available placehol
         format: '&7  --- Empty Slot ---'
 ```
 
-`display-value-with-no-slot` controls the lore added to items that do not have
-enchantment slot data. It is separate from `display-value`, so these items can
-show their enchantments and enchantment descriptions without showing slot
-amounts or empty slots.
+`display-value-with-no-slot` controls the lore added to items that do not have enchantment slot data. It is separate from `display-value`, so these items can show their enchantments and enchantment descriptions without showing slot amounts or empty slots.
 
 ## Enchantment description controls
 
-When enchantment descriptions are enabled, players can control whether they see
-them with the following options:
+{% hint style="info" %}
+This feature provides continued support only for the EnchantmentReform plugin; support for other enchantment plugins will no longer be provided.
+{% endhint %}
+
+When enchantment descriptions are enabled, players can control whether they see them with the following options:
 
 ```yaml
 settings:
@@ -74,15 +74,8 @@ settings:
           require-permission: false
 ```
 
-With `shift-click-ground-toggle` enabled, a player can sneak and right-click a
-block while holding an item to toggle enchantment descriptions. The choice is
-saved on the player and persists across reconnects. Enchantment names and slot
-information remain visible.
+With `shift-click-ground-toggle` enabled, a player can sneak and right-click a block while holding an item to toggle enchantment descriptions. The choice is saved on the player and persists across reconnects. Enchantment names and slot information remain visible.
 
-With both `enabled` and `command-toggle` enabled, players can also use
-`/es toggledescription` to switch the same setting. The command is not
-registered unless both options are enabled, but it can still be used when
-`shift-click-ground-toggle` is disabled.
+With both `enabled` and `command-toggle` enabled, players can also use `/es toggledescription` to switch the same setting. The command is not registered unless both options are enabled, but it can still be used when `shift-click-ground-toggle` is disabled.
 
-With `require-permission` enabled, only players with
-`enchantmentslots.displaydescription` can display or toggle descriptions.
+With `require-permission` enabled, only players with `enchantmentslots.displaydescription` can display or toggle descriptions.
