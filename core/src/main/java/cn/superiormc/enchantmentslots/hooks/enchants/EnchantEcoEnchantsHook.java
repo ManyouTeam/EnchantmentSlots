@@ -4,8 +4,10 @@ import cn.superiormc.enchantmentslots.methods.EnchantsUtil;
 import com.willfp.eco.util.StringUtils;
 import com.willfp.ecoenchants.display.EnchantSorter;
 import com.willfp.ecoenchants.display.EnchantmentFormattingKt;
+import com.willfp.ecoenchants.enchant.EcoEnchant;
 import com.willfp.ecoenchants.enchant.EcoEnchantLike;
 import com.willfp.ecoenchants.enchant.EcoEnchants;
+import com.willfp.ecoenchants.enchant.UtilKt;
 import com.willfp.libreforge.Holder;
 import com.willfp.libreforge.ItemProvidedHolder;
 import org.bukkit.enchantments.Enchantment;
@@ -25,9 +27,27 @@ public class EnchantEcoEnchantsHook extends AbstractEnchantHook {
         super("EcoEnchants");
     }
 
+    private EcoEnchantLike getEcoEnchant(Enchantment enchantment) {
+        EcoEnchantLike ecoEnchant = UtilKt.wrap(enchantment);
+
+        if (ecoEnchant instanceof EcoEnchant) {
+            return ecoEnchant;
+        }
+
+        if (!"minecraft".equals(enchantment.getKey().getNamespace())) {
+            return null;
+        }
+
+        if (ecoEnchant.getConfig().getKeys(false).isEmpty()) {
+            return null;
+        }
+
+        return ecoEnchant;
+    }
+
     @Override
     public String getEnchantName(ItemStack item, Enchantment enchantment, Player player) {
-        EcoEnchantLike ecoEnchant = EcoEnchants.INSTANCE.getByID(enchantment.getKey().getKey());
+        EcoEnchantLike ecoEnchant = getEcoEnchant(enchantment);
         if (ecoEnchant != null) {
             return EcoEnchantsHook.getEcoEnchantName(ecoEnchant, item, player);
         }
@@ -36,7 +56,7 @@ public class EnchantEcoEnchantsHook extends AbstractEnchantHook {
 
     @Override
     public String getRawEnchantName(Enchantment enchantment) {
-        EcoEnchantLike ecoEnchant = EcoEnchants.INSTANCE.getByID(enchantment.getKey().getKey());
+        EcoEnchantLike ecoEnchant = getEcoEnchant(enchantment);
         if (ecoEnchant != null) {
             return StringUtils.format(ecoEnchant.getRawDisplayName());
         }
@@ -45,7 +65,7 @@ public class EnchantEcoEnchantsHook extends AbstractEnchantHook {
 
     @Override
     public List<String> getEnchantDescription(ItemStack item, Enchantment enchantment, Player player) {
-        EcoEnchantLike ecoEnchant = EcoEnchants.INSTANCE.getByID(enchantment.getKey().getKey());
+        EcoEnchantLike ecoEnchant = getEcoEnchant(enchantment);
         if (ecoEnchant == null) {
             return Collections.emptyList();
         }
@@ -73,9 +93,40 @@ public class EnchantEcoEnchantsHook extends AbstractEnchantHook {
 
 class EcoEnchantsHook {
 
-    public static String getEcoEnchantName(EcoEnchantLike ecoEnchant, ItemStack item, Player player) {
-        Holder holder = EcoEnchants.INSTANCE.getByID(ecoEnchant.getEnchantment().getKey().getKey()).getLevel(item.getEnchantmentLevel(ecoEnchant.getEnchantment()));
-        ItemProvidedHolder itemProvidedHolder = new ItemProvidedHolder(holder, item);
-        return EnchantmentFormattingKt.getFormattedName(ecoEnchant, 0, itemProvidedHolder.isShowingAnyNotMet(player));
+    public static String getEcoEnchantName(EcoEnchantLike ecoEnchant,
+                                           ItemStack item,
+                                           Player player) {
+        boolean showNotMet = false;
+
+        if (ecoEnchant instanceof EcoEnchant ecoEnchantImpl) {
+            int level = item.getEnchantmentLevel(
+                    ecoEnchant.getEnchantment()
+            );
+
+            Holder holder =
+                    ecoEnchantImpl.getLevel(level);
+
+            ItemProvidedHolder itemProvidedHolder =
+                    new ItemProvidedHolder(
+                            holder,
+                            item
+                    );
+
+            showNotMet =
+                    itemProvidedHolder.isShowingAnyNotMet(player);
+        }
+
+        String name =
+                EnchantmentFormattingKt.getFormattedName(
+                        ecoEnchant,
+                        0,
+                        showNotMet
+                );
+
+        if (name == null || name.isEmpty()) {
+            return null;
+        }
+
+        return name;
     }
 }

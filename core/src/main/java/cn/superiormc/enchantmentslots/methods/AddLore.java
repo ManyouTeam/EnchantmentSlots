@@ -5,6 +5,7 @@ import cn.superiormc.enchantmentslots.managers.ConfigManager;
 import cn.superiormc.enchantmentslots.managers.HookManager;
 import cn.superiormc.enchantmentslots.managers.LicenseManager;
 import cn.superiormc.enchantmentslots.utils.CommonUtil;
+import org.bukkit.GameMode;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -29,6 +30,9 @@ public class AddLore {
 
     public static ItemStack addLore(ItemStack item, Player player) {
         if (!LicenseManager.licenseManager.valid) {
+            return item;
+        }
+        if (ConfigManager.configManager.getBoolean("settings.add-lore.black-creative", true) && player.getGameMode() == GameMode.CREATIVE) {
             return item;
         }
         List<String> itemLore;
@@ -79,10 +83,12 @@ public class AddLore {
                     itemLore.addAll(index, values);
                     index += values.size();
                 }
-                if (meta instanceof EnchantmentStorageMeta) {
-                    meta.addItemFlags(CommonUtil.getHideStoredEnchants());
+                if (!enchantments.isEmpty()) {
+                    if (meta instanceof EnchantmentStorageMeta) {
+                        meta.addItemFlags(CommonUtil.getHideStoredEnchants());
+                    }
+                    meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                 }
-                meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                 continue;
             }
             if (line.equals("{empty_slots}")) {

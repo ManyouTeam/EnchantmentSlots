@@ -42,7 +42,6 @@ public class ListenerManager {
             Bukkit.getPluginManager().registerEvents(new PlayerClickListener(), EnchantmentSlots.instance);
         }
         Bukkit.getPluginManager().registerEvents(new ExtraSlotItemsListener(), EnchantmentSlots.instance);
-        Bukkit.getPluginManager().registerEvents(new EnchantDescriptionToggleListener(), EnchantmentSlots.instance);
         if (CommonUtil.getMajorVersion(16)) {
             Bukkit.getPluginManager().registerEvents(new PlayerSmithListener(), EnchantmentSlots.instance);
         }

@@ -1,66 +1,94 @@
-# ⚡Add Lore
+# ⚡ Add Lore
 
-EnchantmentSlot supports adding information about enchanting slots to the lore of all matched items, which we call auto add lore.
+Add Lore renders enchantment-slot information, enchantments, and optional
+enchantment descriptions in an item's lore. The feature is configured under
+`settings.add-lore` in `config.yml`.
 
-## Only items has enchantment slot data will add lore
+## How lore is added
 
-You shoud note that only items been set slot will have enchantment slot lore added to them. There are 2 ways to set item enchantment slot.
+Items with slot data use `display-value`. An item without slot data can use the
+separate `display-value-with-no-slot` layout, which is useful when you want to
+show its enchantments but not slot totals or empty slots.
 
-* Item Slot Settings: This feature allows you to set the number of default slots and max slots for matching items. If the item matches, it will be automatically added to the enchantment slot. Please note that this process is not instantaneous and requires interaction between the player and the item. In most case, when player obtaining the item in survival mode will be automatically detected.&#x20;
-* Commands: You can use `/es setslots` or `/es giveslots` command to set your hold item's enchantment slot data.
-
-## Black Item
-
-You can use [Match Item Format](../format/match-item-format.md) to determine which item will not display enchantment slot lore in `black-item` option, or disable this feature in `enabled` option.
+Newly obtained matching items receive slot data when their item-slot setting
+has `auto-add-lore: true`. You can also add slot data manually with
+`/es setslots` or `/es giveslots`.
 
 ```yaml
+settings:
   add-lore:
     enabled: true
-    black-item:
-      material:
-        - book
-        - enchanted_book
-      has-lore: true
+    enable-for-no-slot: true
+    display-value:
+      - '&eSlots: {used_slot_amount}/{slot_amount}'
+      - '{enchants}'
+      - '{empty_slots}'
+    display-value-with-no-slot:
+      - '{enchants}'
 ```
 
-## Content of Add Lore
+`enable-for-no-slot` controls whether the no-slot layout is added at all.
+Items with `HIDE_ENCHANTS` (or `HIDE_STORED_ENCHANTS` for stored
+enchantments) do not receive the no-slot layout.
 
-You can set content of **Add Lore** at `config.yml` file. For available placeholders, please view [this page](built-in-placeholders.md).
+## Layout placeholders
+
+Use these values as complete lines in `display-value` and
+`display-value-with-no-slot`:
+
+| Placeholder | Result |
+| --- | --- |
+| `{enchants}` | One or more formatted lore lines for the item's enchantments. |
+| `{empty_slots}` | One formatted line for every unused enchantment slot. |
+| `{slot_amount}` | Total slots on the item. |
+| `{used_slot_amount}` | Slots consumed by the item's enchantments. |
+| `{enchant_amount}` | Number of enchantments on the item. |
+
+`{enchants}` and `{empty_slots}` must be on their own line to expand into
+multiple lore lines. For all available placeholder details, see
+[Built-in Placeholders](built-in-placeholders.md).
+
+Use `{lang}` as a line when the matching list should come from the player's
+language file rather than `config.yml`. It is resolved through
+`override-lang.settings.add-lore...` in that language file.
+
+## Formatting enchantments and empty slots
 
 ```yaml
-  auto-lore:
-    # Does not support other packed-based item, enchants plugins.
-    # Like EcoEnchants, EcoItems. (You can also try eco as use-listener-plugin, then change packet-listener-priority)
-    # They will always put their lore at first location and EnchantmentSlots can do nothing about it.
-    at-first-or-last: false
-    # Do not change this option when server started!
-    # Only change this if your server has stopped!
-    display-value:
-      - "&#ff3300Enchantment Slots: {enchant_amount}/{slot_amount}"
-      - "{enchants}"
-      - "{empty_slots}"
-    # Used for enchanted items without enchantment slot data.
-    display-value-with-no-slot:
-      - "{enchants}"
+settings:
+  add-lore:
     placeholder:
+      auto-parse: true
       enchants:
-        # Other placeholder: {enchant_level_roman}, {raw_enchant_name}
-        format: '&6  {enchant_name} {enchant_level}'
+        format: '&6  {enchant_name}{enchant_level}{enchant_used_slot}'
+        no-slot-format: '&6{enchant_name}{enchant_level}{enchant_used_slot}'
         sort: true
         auto-add-space: true
+        level-hide-one: true
       empty-slots:
-        format: '&7  --- Empty Slot ---'
+        format: '&7  — Empty slot —'
 ```
 
-`display-value-with-no-slot` controls the lore added to items that do not have
-enchantment slot data. It is separate from `display-value`, so these items can
-show their enchantments and enchantment descriptions without showing slot
-amounts or empty slots.
+`format` is used for an item with slot data, while `no-slot-format` is used by
+`display-value-with-no-slot`. The enchantment format supports
+`{enchant_name}`, `{enchant_raw_name}`, `{enchant_level}`,
+`{enchant_level_roman}`, `{enchant_used_slot}`, and
+`{enchant_description}`.
 
-## Enchantment description controls
+`sort` uses supported enchantment-plugin ordering when available.
+`auto-add-space` inserts a leading space before a non-empty level or slot-cost
+placeholder. `level-hide-one` suppresses the level for enchantments whose
+maximum level is one.
 
-When enchantment descriptions are enabled, players can control whether they see
-them with the following options:
+With `auto-parse: true`, the plugin also replaces Add Lore placeholders already
+written in an item's existing lore. This is needed when placeholders are placed
+in item definitions from another plugin. See [Item Placeholder](../features/item-placeholder.md)
+for usage notes.
+
+## Enchantment descriptions
+
+Description support requires a compatible third-party enchantment plugin. When
+none is installed, enabling this section has no visible effect.
 
 ```yaml
 settings:
@@ -69,20 +97,67 @@ settings:
       enchants:
         description:
           enabled: true
-          shift-click-ground-toggle: true
           command-toggle: true
           require-permission: false
+          format: '&7    {enchant_description}'
+          no-slot-format: '&7  {enchant_description}'
 ```
 
-With `shift-click-ground-toggle` enabled, a player can sneak and right-click a
-block while holding an item to toggle enchantment descriptions. The choice is
-saved on the player and persists across reconnects. Enchantment names and slot
-information remain visible.
+`format` and `no-slot-format` follow the same slot-data rule as enchantment
+names. Descriptions with line breaks or `;;` are rendered as separate lore
+lines.
 
-With both `enabled` and `command-toggle` enabled, players can also use
-`/es toggledescription` to switch the same setting. The command is not
-registered unless both options are enabled, but it can still be used when
-`shift-click-ground-toggle` is disabled.
+When both `enabled` and `command-toggle` are true, players can use
+`/es toggledescription` to show or hide descriptions for themselves. The
+command is registered only when both options are enabled. If
+`require-permission` is true, a player needs
+`enchantmentslots.displaydescription` to see or toggle descriptions.
 
-With `require-permission` enabled, only players with
-`enchantmentslots.displaydescription` can display or toggle descriptions.
+## Display scope and exclusions
+
+```yaml
+settings:
+  add-lore:
+    remove-lore-first: true
+    at-first-or-last: false
+    black-creative: true
+    black-item:
+      any:
+        material:
+          - book
+          - enchanted_book
+```
+
+`remove-lore-first` removes previously generated lore before adding it again;
+keep it enabled to avoid duplicate lines. Generated lines are identified using
+`lore-prefix` (default: `§y`), so do not reuse that marker in normal lore.
+
+`at-first-or-last: false` appends generated lore; set it to `true` to insert it
+before existing lore. `black-creative` disables Add Lore while the viewer is in
+Creative mode. `black-item` uses the same syntax as
+[Match Item Format](../format/match-item-format.md) and excludes every item
+that matches it.
+
+## Performance and listener settings
+
+```yaml
+settings:
+  add-lore:
+    only-in-player-inventory: true
+    check-chests-only: true
+    use-listener-plugin: packetevents
+    packet-listener-priority: LOWEST
+```
+
+`only-in-player-inventory` limits updates to items in a player's own inventory.
+With `check-chests-only: true`, the limitation is relaxed for non-chest
+interfaces; set it to `false` to apply the limitation to every open inventory.
+
+`packetevents` is the recommended `use-listener-plugin` value. `eco` is an
+alternative for servers that use the Eco listener. `packet-listener-priority`
+accepts the priorities supported by the selected listener; use it only when
+resolving lore ordering conflicts with another plugin. Some packet-based item
+or enchantment plugins always place their lore first and cannot be reordered by
+Add Lore.
+
+Restart the server after changing display placement or listener settings.

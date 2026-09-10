@@ -22,6 +22,7 @@
 
 ## 🤖General Configs
 
+* [🎯Set Slot](general-configs/set-slot.md)
 * [⚡Add Lore](general-configs/add-lore.md)
 * [🔧Built-in Placeholders](general-configs/built-in-placeholders.md)
 

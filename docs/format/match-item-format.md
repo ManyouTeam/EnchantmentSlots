@@ -198,6 +198,25 @@ match-item: # or black-item
   has-lore: true
 ```
 
+### Has Slot
+
+Matches an item whose EnchantmentSlots slot amount is at least the configured
+number.
+
+```yaml
+match-item:
+  has-slot: 1
+```
+
+Combine it with `not` to match items without slot data. For example, this
+`ignore-slot-item` rule ignores every item with fewer than one slot:
+
+```yaml
+ignore-slot-item:
+  not:
+    has-slot: 1
+```
+
 ### Has Any Enchants
 
 ```yaml
