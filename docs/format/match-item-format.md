@@ -44,7 +44,7 @@ match-item: # or black-item:
       - 'diamond_sword'
 ```
 
-### ANY&#x20;
+### ANY
 
 If item meet any of those match item rules, we will consider it meet the rule.
 
@@ -94,7 +94,9 @@ For ItemsAdder: Namespace is required, like `namespace_test:item_id_here`.
 
 For MMOItems and EcoItems plugin, there is also a `use-tier-identity` option available in `config.yml` file, which represents whether to use item ID or item tier. If changed to true, you can use tier IDs such as **RARE** here instead of the previous item ID.
 
-### Material&#x20;
+For list of supported item plugins, please see [here](../info/compatibility.md#directly-supported-custom-items-plugins-list).
+
+### Material
 
 Require item material must be the value of this list. This is very similar to items rule, but this rule will only use vanilla item material type.
 
@@ -139,7 +141,7 @@ match-item: # or black-item
     POWER: 1
 ```
 
-### Contains specified levels enchants/stored Enchants  <a href="#remove-enchants" id="remove-enchants"></a>
+### Contains specified levels enchants/stored Enchants <a href="#remove-enchants" id="remove-enchants"></a>
 
 If you want to make only specified enchantment level take effect, you can use int list at here. For example, I want to make only item has Power level 1 enchantment match, then you should set this section like this:
 
@@ -159,7 +161,7 @@ match-item: # or black-item
   contains-enchants-amount: 5
 ```
 
-### Contains Enchants Amount&#x20;
+### Contains Enchants Amount
 
 This means item must has 3 or 5 enchantments in this example, if the item has 4 enchantments or other number of enchantments, it will not being matched.
 
@@ -172,7 +174,7 @@ match-item: # or black-item
 
 Require NBTAPI, download it [here](https://www.spigotmc.org/resources/nbt-api.7939/).
 
-Use `;;` distinguish key value hierarchy.&#x20;
+Use `;;` distinguish key value hierarchy.
 
 ```yaml
 match-item: # or black-item
@@ -200,21 +202,11 @@ match-item: # or black-item
 
 ### Has Slot
 
-Matches an item whose EnchantmentSlots slot amount is at least the configured
-number.
+Matches an item whose EnchantmentSlots slot amount is at least the configured number.
 
 ```yaml
 match-item:
   has-slot: 1
-```
-
-Combine it with `not` to match items without slot data. For example, this
-`ignore-slot-item` rule ignores every item with fewer than one slot:
-
-```yaml
-ignore-slot-item:
-  not:
-    has-slot: 1
 ```
 
 ### Has Any Enchants
@@ -251,7 +243,7 @@ match-item: # or black-item
     - respiration
 ```
 
-### Rarity (1.20.5+)&#x20;
+### Rarity (1.20.5+)
 
 Require item must have specified rarity. Rarity require you extra set in item, by default all items don't have rarity, for item don't have custom rarity, plugin will use "NONE" as result.
 
@@ -264,13 +256,13 @@ match-item: # or black-item
   rarity: NONE
 ```
 
-### NBT String&#x20;
+### NBT String
 
 Require NBTAPI, download it [here](https://www.spigotmc.org/resources/nbt-api.7939/).
 
 Require specifed NBT type must be STRING.
 
-Use `;;` distinguish key value hierarchy.&#x20;
+Use `;;` distinguish key value hierarchy.
 
 The value after the last `;;` symbol represents the required NBT value.
 
@@ -300,4 +292,3 @@ match-item: # or black-item
   nbt-double:
     - 'PublicBukkitValues;;mythicchanger:test;;>=;;5'
 ```
-
