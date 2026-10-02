@@ -139,7 +139,7 @@ override-lang:
       4: '&e☆'
       5: '&6☆'
 
-  enchant-ui:
+  enchant-gui:
     title: 'Enchant UI'
 
   deenchant-gui:
