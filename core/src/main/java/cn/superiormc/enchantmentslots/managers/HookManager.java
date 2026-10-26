@@ -120,6 +120,9 @@ public class HookManager {
         if (CommonUtil.checkPluginLoad("ExcellentEnchants")) {
             registerNewEnchantHook("ExcellentEnchants", new EnchantExcellentEnchantsHook());
         }
+        if (CommonUtil.checkPluginLoad("MeowsEnchants")) {
+            registerNewEnchantHook("MeowsEnchants", new EnchantMeowsEnchantsHook());
+        }
     }
 
     public void registerNewItemHook(String pluginName,
