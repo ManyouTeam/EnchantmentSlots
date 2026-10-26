@@ -58,9 +58,9 @@
         <dependency>
             <groupId>su.nightexpress</groupId>
             <artifactId>ExcellentEnchant</artifactId>
-            <version>5.4.3</version>
+            <version>5.4.1</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/ExcellentEnchants-5.4.3.jar</systemPath>
+            <systemPath>${project.basedir}/lib/ExcellentEnchants-5.4.1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>net.Indyuce</groupId>
@@ -147,6 +147,13 @@
             <version>3.9.3</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/EnchantGui 3.9.3.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.windsor.meowsEnchants</groupId>
+            <artifactId>MeowsEnchants</artifactId>
+            <version>0.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/meowsenchants-0.1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.github.MilkBowl</groupId>
